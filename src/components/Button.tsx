@@ -10,7 +10,7 @@ export default function Button({ variant = 'primary', className, ...props }: But
   const base =
     'w-full py-2 px-4 rounded font-semibold transition-colors duration-200';
   const variants = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700',
+    primary: 'bg-blue-400 text-white hover:bg-blue-600',
     secondary: 'bg-green-600 text-white hover:bg-green-700',
   };
 
