@@ -15,14 +15,14 @@ export default function PostTaskPage() {
           <h1 className="text-xl font-semibold mb-6 text-black">Task Details</h1>
           <form className="space-y-4">
             <div>
-              <label className="block text-black font-medium mb-1">Title</label>
+              <label className="block text-black text-sm font-semibold mb-1">Title</label>
               <input
                 type="text"
                 className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
             <div>
-              <label className="block text-black font-medium mb-1">Description</label>
+              <label className="block text-black text-sm font-semibold mb-1">Description</label>
               <textarea
                 className="w-full border border-gray-300 rounded-xl px-4 py-2 h-60 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
@@ -35,7 +35,7 @@ export default function PostTaskPage() {
                 >
                 Previous
               </Link> 
-              <Link href="/location-details" className="bg-blue-400 text-white px-14 py-3 rounded-xl hover:bg-blue-600 text-lg">
+              <Link href="/location" className="bg-blue-400 text-white px-14 py-3 rounded-xl hover:bg-blue-600 text-lg">
                 Next
                 </Link>
               

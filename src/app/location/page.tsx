@@ -40,7 +40,7 @@ export default function PostTaskPage() {
 
             <form className="grid grid-cols-2 gap-6">
               <div>
-                <label className="block text-black font-medium mb-1">
+                <label className="block text-black text-sm font-semibold mb-1">
                   Address Line 1
                 </label>
                 <input
@@ -49,7 +49,7 @@ export default function PostTaskPage() {
                 />
               </div>
               <div>
-                <label className="block text-black font-medium mb-1">
+                <label className="block text-black text-sm font-semibold mb-1">
                   Address Line 2
                 </label>
                 <input
@@ -58,7 +58,7 @@ export default function PostTaskPage() {
                 />
               </div>
               <div>
-                <label className="block text-black font-medium mb-1">
+                <label className="block text-black text-sm font-semibold mb-1">
                   Home
                 </label>
                 <input
@@ -67,7 +67,7 @@ export default function PostTaskPage() {
                 />
               </div>
               <div>
-                <label className="block text-black font-medium mb-1">
+                <label className="block text-black text-sm font-semibold mb-1">
                   Street
                 </label>
                 <input
@@ -76,7 +76,7 @@ export default function PostTaskPage() {
                 />
               </div>
               <div>
-                <label className="block text-black font-medium mb-1">
+                <label className="block text-black text-sm font-semibold mb-1">
                   State/Province/Area
                 </label>
                 <input
@@ -85,7 +85,7 @@ export default function PostTaskPage() {
                 />
               </div>
               <div>
-                <label className="block text-black font-medium mb-1">
+                <label className="block text-black text-sm font-semibold mb-1">
                   City
                 </label>
                 <input
@@ -94,7 +94,7 @@ export default function PostTaskPage() {
                 />
               </div>
               <div>
-                <label className="block text-black font-medium mb-1">
+                <label className="block text-black text-sm font-semibold mb-1">
                   Phone
                 </label>
                 <input
@@ -103,7 +103,7 @@ export default function PostTaskPage() {
                 />
               </div>
               <div>
-                <label className="block text-black font-medium mb-1">
+                <label className="block text-black text-sm font-semibold mb-1">
                   Country
                 </label>
                 <input
@@ -130,12 +130,12 @@ export default function PostTaskPage() {
             <div className="flex justify-between mt-10">
               <Link
                 href="/task-details"
-                className="bg-blue-100 text-gray-400 px-10 py-3 rounded-xl  text-lg"
+                className="bg-blue-100 text-gray-400 px-10 py-3 rounded-xl text-lg"
               >
                 Previous
               </Link>
               <Link
-                href="#"
+                href="/estimated-budget"
                 className="bg-blue-400 text-white px-14 py-3 rounded-xl hover:bg-blue-600 text-lg"
               >
                 Next
