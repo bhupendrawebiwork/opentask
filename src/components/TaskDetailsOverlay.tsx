@@ -8,7 +8,8 @@ export default function TaskDetailsOverlay({ onClose }) {
   const [liked, setLiked] = useState(true);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-30 flex justify-end">
+   <div className="fixed inset-0 z-50 bg-black/20  flex justify-end">
+
       <div className="w-full max-w-3xl bg-white h-full p-6 overflow-y-auto rounded-l-3xl shadow-xl">
         {/* Header */}
         <div className="flex justify-between items-start">
