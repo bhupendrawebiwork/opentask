@@ -3,13 +3,13 @@ import Image from "next/image";
 
 const Navbar = () => {
   return (
-    <nav className="flex justify-between items-center px-16 py-4 bg-white shadow-sm ">
+    <nav className="flex justify-between items-center px-16 py-4 bg-white shadow-sm border-b-1 border-gray-200 ">
       <div className="text-2xl font-bold text-green-600">
         <Image
-                    src="/assets/logo.png"
+                    src="/assets/main logo.png"
                     alt="Logo"
-                    width={150}
-                    height={100}
+                    width={100}
+                    height={80}
                   />
       </div>
       <ul className="flex gap-6 items-center text-black font-medium">

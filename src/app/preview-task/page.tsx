@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import Link from "next/link";
 import Image from "next/image";
-
+import { Pen } from "lucide-react";
 export default function PostTaskPage() {
   return (
     <div className="min-h-screen bg-white">
@@ -20,11 +20,9 @@ export default function PostTaskPage() {
     <section>
       <div className="flex justify-between items-start mb-4">
         <h2 className="text-lg font-semibold text-black">Task Details</h2>
-        <button className="text-gray-500 hover:text-black">
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M4 13h12l-6 6-6-6zm0-6h12l-6-6-6 6z" />
-          </svg>
-        </button>
+        <a href="#">
+          <Pen className="w-8 h-8 p-2 bg-black rounded-full text-white" />
+        </a>
       </div>
       <p className="text-gray-800 text-sm font-semibold">Title</p>
       <p className="text-sm mb-3">Web Migration Task</p>
@@ -44,30 +42,34 @@ export default function PostTaskPage() {
     <section>
       <div className="flex justify-between items-start mb-4">
         <h2 className="text-lg font-semibold text-black">Location</h2>
-        <button className="text-gray-500 hover:text-black">
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M4 13h12l-6 6-6-6zm0-6h12l-6-6-6 6z" />
-          </svg>
-        </button>
+        <a href="#">
+          <Pen className="w-8 h-8 p-2 bg-black rounded-full text-white" />
+        </a>
       </div>
 
-      <div className="grid grid-cols-3 gap-8">
+      <div className="grid grid-cols-2 gap-8">
         <div className="space-y-1 text-sm">
-          <p><span className="font-semibold text-black">Type:</span> In Person</p>
-          <p><span className="font-semibold text-black">Street:</span> 95 Mills Street</p>
-          <p><span className="font-semibold text-black">City:</span> Inverloch</p>
-          <p><span className="font-semibold text-black">Country:</span> Australia</p>
-          <p><span className="font-semibold text-black">State:</span> Victoria</p>
-          <p><span className="font-semibold text-black">Phone:</span> (03) 5310 5939</p>
-          <p><span className="font-semibold text-black">Zip code:</span> 3996</p>
-          <p><span className="font-semibold text-black">Country code:</span> +61</p>
+          <div>
+          <p><span className="font-semibold text-black mb-2">Type:</span><br/>In Person</p>
+          </div>
+          
+          <h6 className="mt-2"><span className="font-semibold text-black">Address:</span><br/></h6>
+          <div className="grid grid-cols-2 mt-2">
+          <p className="text-gray-500"><span className="font-semibold ">Street:</span> 95 Mills Street</p>
+          <p className="text-gray-500"><span className="font-semibold ">City:</span> Inverloch</p>
+          <p className="text-gray-500"><span className="font-semibold">Country:</span> Australia</p>
+          <p className="text-gray-500"><span className="font-semibold">State:</span> Victoria</p>
+          <p className="text-gray-500"><span className="font-semibold">Phone:</span> (03) 5310 5939</p>
+          <p className="text-gray-500"><span className="font-semibold">Zip code:</span> 3996</p>
+          <p className="text-gray-500"><span className="font-semibold">Country code:</span> +61</p>
         </div>
+</div>
         <div>
-          <div className="rounded-xl overflow-hidden border border-gray-300 relative">
+          <div className="rounded-xl overflow-hidden border border-gray-300 mr-10">
             <iframe
                 title="Google Map"
                 width="100%"
-                height="400"
+                height="250"
                 frameBorder="0"
                 style={{ border: 0 }}
                 referrerPolicy="no-referrer-when-downgrade"
@@ -75,11 +77,7 @@ export default function PostTaskPage() {
                 allowFullScreen
                 loading="lazy"
               ></iframe>
-            <button className="absolute top-2 right-2 bg-white p-1 rounded-full shadow">
-              <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M4 13h12l-6 6-6-6zm0-6h12l-6-6-6 6z" />
-              </svg>
-            </button>
+            
           </div>
         </div>
       </div>
@@ -90,11 +88,9 @@ export default function PostTaskPage() {
     <section>
       <div className="flex justify-between items-start mb-4">
         <h2 className="text-lg font-semibold text-black">Estimated budget & completion date</h2>
-        <button className="text-gray-500 hover:text-black">
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M4 13h12l-6 6-6-6zm0-6h12l-6-6-6 6z" />
-          </svg>
-        </button>
+        <a href="#">
+          <Pen className="w-8 h-8 p-2 bg-black rounded-full text-white" />
+        </a>
       </div>
       <div className="text-sm space-y-1 ">
         <p><span className="font-semibold text-black">Budget:</span></p>
@@ -109,17 +105,15 @@ export default function PostTaskPage() {
     <section>
       <div className="flex justify-between items-start mb-4">
         <h2 className="text-lg font-semibold text-black">Media</h2>
-        <button className="text-gray-500 hover:text-black">
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M4 13h12l-6 6-6-6zm0-6h12l-6-6-6 6z" />
-          </svg>
-        </button>
+        <a href="#">
+          <Pen className="w-8 h-8 p-2 bg-black rounded-full text-white" />
+        </a>
       </div>
       <div className="grid grid-cols-8 gap-0    ">
         {[1, 2, 3, 4, 5].map((item, index) => (
           <div key={index} className="relative">
             <Image
-              src="/assets/img.png" // Replace with your actual image path
+              src="/assets/img.png" 
               alt={`Media ${index + 1}`}
               width={160}
               height={100}
@@ -153,7 +147,7 @@ export default function PostTaskPage() {
         Previous
       </Link>
       <Link
-        href="/success"
+        href="/task-card"
         className="bg-blue-500 hover:bg-blue-600 text-white px-14 py-3 rounded-xl text-lg"
       >
         Preview

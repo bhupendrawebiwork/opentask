@@ -21,10 +21,15 @@ const Sidebar = () => {
     { icon: FileText, label: "Preview", slug: "preview-task" },
   ];
 
-  const currentStep = steps.findIndex((step) => pathname.includes(`/${step.slug}`));
+  const currentStep = steps.findIndex((step) =>
+    pathname.includes(`/${step.slug}`)
+  );
 
   return (
-    <div className="w-64 p-10 min-h-screen" style={{ backgroundColor: "#F7F5F8" }}>
+    <div
+      className="w-64 p-10 min-h-screen"
+      style={{ backgroundColor: "#F7F5F8" }}
+    >
       <h2 className="text-lg font-semibold mb-12 text-black text-start ml-4">
         Task Post Steps
       </h2>
@@ -60,7 +65,12 @@ const Sidebar = () => {
                 )}
               </div>
 
-              <Link href={`/${step.slug}`} className="text-start mb-14">
+              <Link
+                href={`/${step.slug}`}
+                className={`text-start ${
+                  index !== steps.length - 1 ? "mb-14" : ""
+                }`}
+              >
                 <span
                   className={`text-sm font-medium transition-colors duration-300 ${
                     isActive || isCompleted
