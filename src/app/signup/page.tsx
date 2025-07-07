@@ -10,16 +10,16 @@ export default function SignUp() {
     <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="flex flex-col md:flex-row bg-white rounded-4xl shadow-lg overflow-hidden max-w-5xl w-full h-170"
       style={{
-            backgroundImage:
-              "linear-gradient(to bottom right, #21202F, #559BF6)",
-          }}>
+          backgroundImage: "linear-gradient(to bottom right, #2778E0, #6BE353)",
+        }}>
         {/* Left Section */}
         <div
-          className="text-white p-10 flex-1 flex flex-col justify-center items-center space-y-6"
+          className="text-white p-10 flex-1 flex flex-col justify-center items-center space-y-3"
         >
           <h2 className="text-3xl font-bold text-left leading-tight">
-            Create Your Account <br /> And Unlock Endless <br /> Possibilities.
+            Create Your Account 
           </h2>
+          <p className="text-center mb-6">Create your account to find freelance jobs or hire top talent.</p>
           <Image
             src="/assets/signup.png"
             alt="Signup Illustration"
@@ -29,26 +29,26 @@ export default function SignUp() {
         </div>
 
         {/* Right Section */}
-        <div className="flex-1/5 p-8 sm:py-20 rounded-4xl bg-white">
-          <h3 className="text-2xl font-bold mb-6 text-black">Create Account</h3>
+        <div className="flex-1/9 p-8 sm:py-20 rounded-4xl bg-white">
+          <h3 className="text-2xl font-bold mb-6 text-black">Create Your Account</h3>
           <form className="space-y-6">
             <div>
-              <label className="block font-bold text-md  text-black">
+              <label className="block font-semibold text-md  text-gray-500">
                 Name
               </label>
-              <Input className="text-black  w-full border-0 border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none placeholder-gray-300" type="text" placeholder="Enter Your Name" />
+              <Input className="text-black  w-full border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none placeholder-gray-300" type="text" placeholder="Enter Your Name" />
             </div>
             <div>
-              <label className=" font-bold text-md  text-black">
+              <label className="font-semibold text-md  text-gray-500">
                 Email
               </label>
-              <Input className= " text-black  w-full border-0 border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none placeholder-gray-300" type="email" placeholder="Enter Your Email" />
+              <Input className= " text-black  w-full border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none placeholder-gray-300" type="email" placeholder="Enter Your Email" />
             </div>
             <div>
-              <label className="block font-bold text-md  text-black">
+              <label className="font-semibold text-md  text-gray-500">
                 Password
               </label>
-              <Input className="text-black w-full border-0 border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none placeholder-gray-300 " type="password" placeholder="Enter Your Password" />
+              <Input className="text-black w-full border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none placeholder-gray-300 " type="password" placeholder="Enter Your Password" />
             </div>
 
             <div className="flex items-center text-sm">

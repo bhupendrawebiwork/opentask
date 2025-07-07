@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Star, Heart } from "lucide-react";
+import { MapPin, Star, Heart, CheckCircle } from "lucide-react";
 
 export default function TaskCard({ onClick }) {
   return (
@@ -22,7 +22,9 @@ export default function TaskCard({ onClick }) {
       </div>
 
       <div className="flex items-center text-sm text-gray-500 mt-2 gap-4">
-        <span className="text-green-600 font-medium">✔ Payment Verified</span>
+        <span className="flex items-center gap-1 text-green-600 font-medium">
+                  <CheckCircle size={16} /> Payment Verified
+                </span>
         <span className="flex items-center gap-1 text-yellow-500">
           {[...Array(4)].map((_, i) => (
             <Star key={i} size={14} fill="currentColor" strokeWidth={0} />

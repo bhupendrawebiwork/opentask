@@ -8,8 +8,8 @@ const Navbar = () => {
         <Image
                     src="/assets/main logo.png"
                     alt="Logo"
-                    width={100}
-                    height={80}
+                    width={80}
+                    height={0}
                   />
       </div>
       <ul className="flex gap-6 items-center text-black font-medium">
@@ -21,7 +21,7 @@ const Navbar = () => {
           <a href="#" className="bg-black text-white px-4 py-2 rounded-xl">Post Task</a>
         </li>
         <li>
-            <a href="#" className="flex items-center gap-2">
+            <a href="/profile" className="flex items-center gap-2">
           <Image
                     src="/assets/social-icons/profile.png"
                     alt="Profile"

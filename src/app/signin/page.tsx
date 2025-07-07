@@ -14,10 +14,11 @@ export default function SignUp() {
         }}
       >
         {/* Left Section */}
-        <div className="text-white  flex-1 flex flex-col justify-center items-center space-y-6">
+        <div className="text-white  flex-1 flex flex-col justify-center items-center space-y-2">
           <h2 className="text-3xl font-bold text-left leading-tight">
-            Login Your Account <br /> Welcome Back!
+            Login Your Account 
           </h2>
+          <p className="text-center mb-8">Welcome Back!</p>
           <Image
             src="/assets/signin.png"
             alt="Signup Illustration"
@@ -27,31 +28,32 @@ export default function SignUp() {
         </div>
 
         {/* Right Section */}
-        <div className="flex-1/5 p-8 sm:py-20 rounded-4xl bg-white">
+        <div className="flex-1/9 p-8 sm:py-20 rounded-4xl bg-white">
           <h3 className="text-2xl font-bold mb-6 text-black">Login</h3>
           <form className="space-y-8">
             <div>
-              <label className=" font-bold text-md  text-black">Email</label>
+              <label className="block font-semibold text-md  text-gray-500">Email</label>
               <Input
-                className=" text-black  w-full border-0 border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none placeholder-gray-300"
+                className=" text-black w-full border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none placeholder-gray-300"
                 type="email"
                 placeholder="Enter Your Email"
               />
-              <Link href="/signup" className="text-blue-400 flex justify-end mt-1">
-                  Forgot Password ?
-                </Link>
+              
 
             </div>
             
             <div>
-              <label className="block font-bold text-md  text-black">
+              <label className="block font-semibold text-md  text-gray-500">
                 Password
               </label>
               <Input
-                className="text-black w-full border-0 border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none placeholder-gray-300 "
+                className="text-black w-full border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none placeholder-gray-300 "
                 type="password"
                 placeholder="Enter Your Password"
               />
+              <Link href="/forget-password" className="text-blue-400 flex justify-end mt-1 text-sm">
+                  Forgot Password ?
+                </Link>
             </div>
 
             <div className="flex items-center text-sm">

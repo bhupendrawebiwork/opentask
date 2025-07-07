@@ -9,6 +9,7 @@ export default function Home() {
         <Link href="/signup" className="px-4 py-2 bg-blue-600 text-white rounded-md">Sign Up</Link>
         <Link href="/signin" className="px-4 py-2 bg-green-600 text-white rounded-md">Sign In</Link>
         <Link href="/task-details" className="px-4 py-2 bg-green-600 text-white rounded-md">Post Task</Link>
+         <Link href="/chatpage" className="px-4 py-2 bg-pink-400 text-white rounded-md">Chat</Link>
       </div>
     </main>
   );
