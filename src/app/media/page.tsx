@@ -1,10 +1,29 @@
 "use client";
+
+import { useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function PostTaskPage() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [mediaFiles, setMediaFiles] = useState<File[]>([]);
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      setMediaFiles((prev) => [...prev, ...filesArray]);
+    }
+  };
+
+  const isImage = (file: File) => file.type.startsWith("image");
+  const isVideo = (file: File) => file.type.startsWith("video");
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
@@ -15,14 +34,16 @@ export default function PostTaskPage() {
           <h1 className="text-xl font-bold mb-4 text-black ml-10">Post Task</h1>
 
           <div className="bg-white rounded-xl px-10 py-8 mx-10">
-           
             <h2 className="text-md font-semibold text-black mb-6">Media</h2>
 
-            
-            <div className="border border-gray-300 rounded-xl flex flex-col items-center justify-center py-16 mb-10">
+            {/* Upload Section */}
+            <div
+              onClick={handleUploadClick}
+              className="border border-gray-300 rounded-xl flex flex-col items-center justify-center py-16 mb-10 cursor-pointer hover:bg-gray-50 transition"
+            >
               <Image
-                src="/assets/upload.png" 
-                alt="Icon"
+                src="/assets/upload.png"
+                alt="Upload"
                 width={116}
                 height={116}
               />
@@ -31,33 +52,42 @@ export default function PostTaskPage() {
               </p>
             </div>
 
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,video/*"
+              multiple
+              onChange={handleFilesChange}
+              className="hidden"
+            />
+
             {/* Media Thumbnails */}
-            <div className="grid grid-cols-6 gap-0 mb-12">
-              {[1, 2, 3, 4].map((item, index) => (
-                <div key={index} className="relative">
-                  <Image
-                    src="/assets/img.png" 
-                    alt={`Media ${index + 1}`}
-                    width={200}
-                    height={150}
-                    className="rounded-lg object-cover"
-                  />
-                  {index === 3 && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="bg-white bg-opacity-60 rounded-full p-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-6 w-6 text-blue-500"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M4.5 3.5v13l11-6.5-11-6.5z" />
-                        </svg>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+            <div className="grid grid-cols-6 gap-4 mb-12">
+              {mediaFiles.map((file, index) => {
+                const fileURL = URL.createObjectURL(file);
+
+                return (
+                  <div
+                    key={index}
+                    className="relative w-full h-[120px] overflow-hidden rounded-lg border"
+                  >
+                    {isImage(file) ? (
+                      <img
+                        src={fileURL}
+                        alt={`media-${index}`}
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    ) : isVideo(file) ? (
+                      <video
+                        src={fileURL}
+                        controls
+                        className="w-full h-full object-cover"
+                      />
+                    ) : null}
+                  </div>
+                );
+              })}
             </div>
 
             <div className="flex justify-between">
