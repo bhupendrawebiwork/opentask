@@ -1,67 +1,151 @@
 "use client";
+import { useState, useEffect } from "react";
 import { User, Mail, Phone, Briefcase, Building2 } from "lucide-react";
 
-export default function EditProfileForm() {
+export default function EditProfileForm({ user, handleUpdate }: any) {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    position: "",
+    companyName: "",
+  });
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        position: user.position || "",
+        companyName: user.companyName || "",
+      });
+    }
+  }, [user]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log({ formData });
+
+    handleUpdate(formData); // this should POST to /user
+  };
+
   return (
     <>
       <h3 className="text-xl font-semibold text-gray-800 mb-6">Edit Profile</h3>
-      <form className="grid grid-cols-2 gap-6">
+      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
         {/* Name */}
         <div>
-          <label className="text-sm font-semibold text-gray-700 mb-1 block">Name</label>
+          <label className="text-sm font-semibold text-gray-700 mb-1 block">
+            Name
+          </label>
           <div className="relative">
             <User className="absolute top-3 left-3 text-gray-400" size={16} />
-            <input type="text" placeholder="Daniel James"
-              className="w-full pl-10 pr-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none font-semibold text-sm" />
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Daniel James"
+              className="w-full pl-10 pr-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none font-semibold text-sm"
+            />
           </div>
         </div>
 
         {/* Phone */}
         <div>
-          <label className="text-sm font-semibold text-gray-700 mb-1 block">Phone</label>
+          <label className="text-sm font-semibold text-gray-700 mb-1 block">
+            Phone
+          </label>
           <div className="relative">
             <Phone className="absolute top-3 left-3 text-gray-400" size={16} />
-            <input type="text" placeholder="(571)-523-6952"
-              className="w-full pl-10 pr-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none font-semibold text-sm" />
+            <input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="(571)-523-6952"
+              className="w-full pl-10 pr-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none font-semibold text-sm"
+            />
           </div>
         </div>
 
         {/* Email */}
         <div>
-          <label className="text-sm text-gray-700 mb-1 block font-semibold">Email</label>
+          <label className="text-sm text-gray-700 mb-1 block font-semibold">
+            Email
+          </label>
           <div className="relative">
             <Mail className="absolute top-3 left-3 text-gray-400" size={16} />
-            <input type="email" placeholder="daniel.james@gmail.com"
-              className="w-full pl-10 pr-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none font-semibold text-sm" />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="daniel.james@gmail.com"
+              className="w-full pl-10 pr-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none font-semibold text-sm"
+              disabled
+            />
           </div>
         </div>
 
         {/* Position */}
         <div>
-          <label className="text-sm text-gray-700 mb-1 block font-semibold">Position</label>
+          <label className="text-sm text-gray-700 mb-1 block font-semibold">
+            Position
+          </label>
           <div className="relative">
-            <Briefcase className="absolute top-3 left-3 text-gray-400" size={16} />
-            <input type="text" placeholder="Sr. Technical Head"
-              className="w-full pl-10 pr-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none font-semibold text-sm" />
+            <Briefcase
+              className="absolute top-3 left-3 text-gray-400"
+              size={16}
+            />
+            <input
+              type="text"
+              name="position"
+              value={formData.position}
+              onChange={handleChange}
+              placeholder="Sr. Technical Head"
+              className="w-full pl-10 pr-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none font-semibold text-sm"
+            />
           </div>
         </div>
 
         {/* Company */}
         <div>
-          <label className="text-sm text-gray-700 mb-1 block font-semibold">Company Name</label>
+          <label className="text-sm text-gray-700 mb-1 block font-semibold">
+            Company Name
+          </label>
           <div className="relative">
-            <Building2 className="absolute top-3 left-3 text-gray-400" size={16} />
-            <input type="text" placeholder="Tech solution and support systems"
-              className="w-full pl-10 pr-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none font-semibold text-sm" />
+            <Building2
+              className="absolute top-3 left-3 text-gray-400"
+              size={16}
+            />
+            <input
+              type="text"
+              name="companyName"
+              value={formData.companyName}
+              onChange={handleChange}
+              placeholder="Tech solution and support systems"
+              className="w-full pl-10 pr-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none font-semibold text-sm"
+            />
           </div>
         </div>
+        <div className="text-left mt-14">
+          <button
+            type="submit"
+            className="bg-blue-400 text-white px-8 py-3 rounded-xl hover:bg-blue-500 transition"
+          >
+            Update Details
+          </button>
+        </div>
       </form>
-
-      <div className="text-left mt-14">
-        <button className="bg-blue-400 text-white px-8 py-3 rounded-xl hover:bg-blue-500 transition">
-          Update Details
-        </button>
-      </div>
     </>
   );
 }

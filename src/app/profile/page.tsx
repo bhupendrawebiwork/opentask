@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import EditProfileForm from "@/components/EditProfile";
@@ -19,9 +19,12 @@ import {
   Star,
   Globe,
 } from "lucide-react";
+import { baseUrl, imgUrl } from "@/config/constent";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("edit");
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>({});
 
   const menuItems = [
     { key: "edit", label: "Edit Profile", icon: <User size={18} /> },
@@ -31,58 +34,166 @@ export default function ProfilePage() {
     { key: "settings", label: "Setting", icon: <Settings size={18} /> },
   ];
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        if (!token) return;
+
+        const res = await fetch(baseUrl + "/user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const resJson = await res.json();
+        if (!res.ok) throw new Error(resJson.message);
+
+        setUser(resJson);
+      } catch (err) {
+        console.error("Error fetching user:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  const handleUpdate = async (updatedData: any) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const res = await fetch(baseUrl + "/user", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updatedData),
+      });
+      const resJson = await res.json();
+      if (!res.ok) throw new Error(resJson.message);
+      alert("Profile updated successfully");
+      setUser(resJson);
+    } catch (err: any) {
+      alert("Update failed: " + err.message);
+    }
+  };
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("avatar", file);
+
+  try {
+    const token = localStorage.getItem("authToken");
+    const res = await fetch(`${baseUrl}/user/avatar`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.message || "Upload failed");
+
+    alert("Profile image updated successfully!");
+
+    // 👇 Update local state to reflect new avatar
+    setUser(result);
+
+  } catch (err) {
+    console.error("Upload error:", err);
+    alert("Failed to upload profile image");
+  }
+};
+
+
   return (
     <div className="min-h-screen bg-[#EEF2F8]">
       <Navbar />
       <div className="bg-white rounded-3xl shadow p-8 flex justify-between items-center mx-12 mt-4">
         <div className="flex items-center gap-6">
           <div className="relative w-35 h-35 rounded-3xl overflow-hidden">
-            <Image src="/assets/profile.png" alt="User" fill className="object-cover" />
+            <Image
+              src={
+                user?.avatar
+                  ? `${imgUrl}${user.avatar}`
+                  : "/assets/profile.png"
+              }
+              alt="User"
+              fill
+              className="object-cover"
+            />
             <div className="absolute bottom-2 right-0 bg-blue-500 rounded-full p-1 z-10">
-              <Camera className="text-white w-4 h-4" />
+              <label htmlFor="file-upload" className="cursor-pointer">
+                <Camera className="text-white w-4 h-4" />
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
             </div>
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-3xl font-semibold text-black">Daniel James</h2>
-            <p className="text-gray-500 text-lg">Sr. Technical Head</p>
+            <h2 className="text-3xl font-semibold text-black">
+              {loading ? "Loading..." : user?.name || "N/A"}
+            </h2>
+            <p className="text-gray-500 text-lg">{user?.position || ""}</p>
             <div className="text-gray-500 text-sm mt-1">
               <Mail className="inline mr-2" size={14} />
-              daniel.james@gmail.com
+              {user?.email || ""}
             </div>
             <div className="text-gray-500 text-sm">
               <Phone className="inline mr-2" size={14} />
-              (571)-523-6952
+              {user?.phone || ""}
             </div>
           </div>
         </div>
         <div className="text-right">
           <div className="flex gap-2 mb-1">
             <p className="flex items-center gap-1 text-green-500 font-bold text-xs">
-              <CheckCircle size={16} /> User Verified
+              <CheckCircle size={16} />{" "}
+              {user?.isVerified ? "User Verified" : "Not Verified"}
             </p>
           </div>
           <div className="flex text-yellow-400">
-            {[...Array(4)].map((_, i) => (
+            {[...Array(user?.rating || 0)].map((_, i) => (
               <Star key={i} size={18} fill="currentColor" strokeWidth={0} />
             ))}
-            <Star size={18} fill="white" stroke="currentColor" strokeWidth={2} />
+            {[...Array(5 - (user?.rating || 0))].map((_, i) => (
+              <Star
+                key={i}
+                size={18}
+                fill="white"
+                stroke="currentColor"
+                strokeWidth={2}
+              />
+            ))}
           </div>
 
           <div className="mt-2">
             <Globe className="absolute text-white mt-2 ml-1" size={16} />
-            <select className="rounded px-5 py-2 text-sm bg-gray-600 text-white text-center">
-              <option>English</option>
-              <option>Hindi</option>
-              <option>French</option>
+            <select
+              className="rounded px-5 py-2 text-sm bg-gray-600 text-white text-center"
+              value={user?.lang || "english"}
+              onChange={(e) => handleUpdate({ lang: e.target.value })}
+            >
+              <option value="english">English</option>
+              <option value="hindi">Hindi</option>
+              <option value="french">French</option>
             </select>
           </div>
         </div>
       </div>
 
-     
       <div className="flex px-6 py-6 gap-6">
-        {/* Sidebar */}
         <div className="w-1/6">
           <ul className="bg-[#EEF2F8] rounded-3xl p-6 space-y-4">
             {menuItems.map((item) => (
@@ -106,14 +217,12 @@ export default function ProfilePage() {
           </ul>
         </div>
 
-       
         <div className="w-3/4 bg-white p-8 rounded-3xl shadow">
-  {activeTab === "edit" && <EditProfileForm />}
-  {activeTab === "password" && <ChangePasswordForm />}
-  {/* {activeTab === "wallet" && <Wallet />}
-  {activeTab === "password" && <ChangePasswordForm />} */}
-  
-</div>
+          {activeTab === "edit" && (
+            <EditProfileForm user={user} handleUpdate={handleUpdate} />
+          )}
+          {activeTab === "password" && <ChangePasswordForm />}
+        </div>
       </div>
     </div>
   );

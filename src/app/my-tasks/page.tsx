@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import MyTasks from "@/components/MyTasks";
 import Navbar from "@/components/Navbar";
+import { baseUrl } from "@/config/constent";
 
 export default function MyTasksPage() {
   const [tasks, setTasks] = useState([]);
@@ -17,19 +18,19 @@ export default function MyTasksPage() {
           return;
         }
 
-        const res = await fetch("https://777b7ef2fa99.ngrok-free.app/api/tasks", {
+        const res = await fetch(baseUrl + "/tasks", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        const text = await res.text(); // debug response
+        const resjson = await res.json(); // debug response
         try {
-          const data = JSON.parse(text);
-          if (!res.ok) throw new Error(data.message || "Failed to load tasks");
-          setTasks(data);
+         
+          if (!res.ok) throw new Error(resjson.message || "Failed to load tasks");
+          setTasks(resjson.data);
         } catch (err) {
-          console.error("Failed to parse JSON:", text);
+          console.error("Failed to parse JSON:", resjson.error.message);
         }
       } catch (err) {
         console.error("Error fetching tasks:", err);

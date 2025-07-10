@@ -5,6 +5,7 @@ import Link from "next/link";
 import Input from "@/components/Input";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import { baseUrl } from "@/config/constent";
 
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ export default function ForgetPassword() {
 
     try {
       const response = await fetch(
-        "https://777b7ef2fa99.ngrok-free.app/api/auth/forgot-password",
+        baseUrl + "/auth/forgot-password",
         {
           method: "POST",
           headers: {

@@ -6,6 +6,7 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { baseUrl } from "@/config/constent";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -22,7 +23,7 @@ export default function SignUp() {
 
   try {
     const response = await fetch(
-      "https://777b7ef2fa99.ngrok-free.app/api/auth/register",
+      baseUrl + "/auth/register",
       {
         method: "POST",
         headers: {

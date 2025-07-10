@@ -7,6 +7,7 @@ import Button from "@/components/Button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { baseUrl } from "@/config/constent";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -19,7 +20,7 @@ export default function SignIn() {
     setLoading(true);
 
     try {
-      const response = await fetch("https://777b7ef2fa99.ngrok-free.app/api/auth/login", {
+      const response = await fetch(baseUrl + "/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

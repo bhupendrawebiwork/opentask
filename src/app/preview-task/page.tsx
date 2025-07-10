@@ -7,6 +7,7 @@ import { Pen } from "lucide-react";
 import { useTaskContext } from "@/context/TaskContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { baseUrl } from "@/config/constent";
 
 export default function PostTaskPage() {
   const { taskData } = useTaskContext();
@@ -51,7 +52,7 @@ formData.append("address[phone]", address.phone || "");
     }
 
     try {
-      const response = await fetch("https://777b7ef2fa99.ngrok-free.app/api/tasks", {
+      const response = await fetch(baseUrl + "/tasks", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
