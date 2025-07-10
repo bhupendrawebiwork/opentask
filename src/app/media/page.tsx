@@ -3,12 +3,17 @@
 import { useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
-import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useTaskContext } from "@/context/TaskContext";
+import Link from "next/link";
 
 export default function PostTaskPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [mediaFiles, setMediaFiles] = useState<File[]>([]);
+  const [mediaFiles, setMediaFiles] = useState<any>([]);
+  const router = useRouter();
+
+  const { setTaskData } = useTaskContext();
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
@@ -17,12 +22,33 @@ export default function PostTaskPage() {
   const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
+
+      if (mediaFiles.length + filesArray.length > 5) {
+        alert("You can only upload up to 5 files.");
+        return;
+      }
+
       setMediaFiles((prev) => [...prev, ...filesArray]);
     }
   };
 
   const isImage = (file: File) => file.type.startsWith("image");
   const isVideo = (file: File) => file.type.startsWith("video");
+
+  const handleNext = (e: React.FormEvent) => {
+    e.preventDefault();
+
+
+    // Save media URLs in context (temporary preview URLs)
+    const mediaUrls = mediaFiles.map((file) =>( {url:URL.createObjectURL(file), file:file}));
+console.log(mediaFiles  , "mediaFiles ");
+    setTaskData((prev) => ({
+      ...prev,
+      media: mediaUrls,
+    }));
+
+    router.push("/preview-task");
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -33,13 +59,13 @@ export default function PostTaskPage() {
         <main className="flex-1 p-10 bg-[#F7F5F8]">
           <h1 className="text-xl font-bold mb-4 text-black ml-10">Post Task</h1>
 
-          <div className="bg-white rounded-xl px-10 py-8 mx-10">
+          <form onSubmit={handleNext} className="bg-white rounded-xl px-10 py-8 mx-10">
             <h2 className="text-md font-semibold text-black mb-6">Media</h2>
 
             {/* Upload Section */}
             <div
               onClick={handleUploadClick}
-              className="border border-gray-300 rounded-xl flex flex-col items-center justify-center py-16 mb-10 cursor-pointer hover:bg-gray-50 transition"
+              className="border border-blue-300 rounded-xl flex flex-col items-center justify-center py-16 mb-10 cursor-pointer hover:bg-gray-50 transition"
             >
               <Image
                 src="/assets/upload.png"
@@ -47,12 +73,11 @@ export default function PostTaskPage() {
                 width={116}
                 height={116}
               />
-              <p className="text-center text-black text-lg font-semibold mt-4">
+              <p className="text-center text-gray-400 text-lg font-semibold mt-4">
                 Upload images and videos for your task clarification.
               </p>
             </div>
 
-            {/* Hidden file input */}
             <input
               ref={fileInputRef}
               type="file"
@@ -62,15 +87,14 @@ export default function PostTaskPage() {
               className="hidden"
             />
 
-            {/* Media Thumbnails */}
+            {/* Preview Thumbnails */}
             <div className="grid grid-cols-6 gap-4 mb-12">
               {mediaFiles.map((file, index) => {
                 const fileURL = URL.createObjectURL(file);
-
                 return (
                   <div
                     key={index}
-                    className="relative w-full h-[120px] overflow-hidden rounded-lg border"
+                    className="relative w-full h-[200px] overflow-hidden rounded-lg border border-gray-300"
                   >
                     {isImage(file) ? (
                       <img
@@ -97,14 +121,14 @@ export default function PostTaskPage() {
               >
                 Previous
               </Link>
-              <Link
-                href="/preview-task"
+              <button
+                type="submit"
                 className="bg-blue-500 hover:bg-blue-600 text-white px-14 py-3 rounded-xl text-lg"
               >
                 Preview
-              </Link>
+              </button>
             </div>
-          </div>
+          </form>
         </main>
       </div>
     </div>

@@ -1,11 +1,44 @@
 "use client";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
-import Link from "next/link";
 import { useState } from "react";
+import { useTaskContext } from "@/context/TaskContext";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function PostTaskPage() {
   const [isRemote, setIsRemote] = useState(false);
+  const { taskData, setTaskData } = useTaskContext();
+  const [addressLine1, setAddressLine1] = useState(taskData.address?.addressLine1 || "");
+  const [addressLine2, setAddressLine2] = useState(taskData.address?.addressLine2 || "");
+  const [home, setHome] = useState(taskData.address?.home || "");
+  const [street, setStreet] = useState(taskData.address?.street || "");
+  const [state, setState] = useState(taskData.address?.state || "");
+  const [city, setCity] = useState(taskData.address?.city || "");
+  const [country, setCountry] = useState(taskData.address?.country || "");
+  const [phone, setPhone] = useState(taskData.address?.phone || "");
+   const router = useRouter();
+
+const handleNext = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Save current step data to global context
+    setTaskData((prev) => ({
+  ...prev,
+  address: {
+    addressLine1,
+    addressLine2,
+    home,
+    street,
+    state,
+    city,
+    country,
+    phone,
+  },
+}));
+ router.push("/estimated-budget");
+  };
+  // console.log("updated Task Data:", taskData);
 
   return (
     <div className="min-h-screen bg-white">
@@ -38,7 +71,8 @@ export default function PostTaskPage() {
               </button>
             </div>
 
-            <form className="grid grid-cols-2 gap-6">
+            <form onSubmit={handleNext}>
+              <div className="grid grid-cols-2 gap-6">
               <div>
                 <label className="block text-black text-sm font-semibold mb-1">
                   Address Line 1
@@ -46,6 +80,9 @@ export default function PostTaskPage() {
                 <input
                   className="w-full border border-gray-300 p-2 rounded-xl"
                   type="text"
+                  value={addressLine1}
+                  onChange={(e) => setAddressLine1(e.target.value)}
+                  required
                 />
               </div>
               <div>
@@ -55,6 +92,9 @@ export default function PostTaskPage() {
                 <input
                   className="w-full border border-gray-300 p-2 rounded-xl"
                   type="text"
+                  value={addressLine2}
+                  onChange={(e) => setAddressLine2(e.target.value)}
+                  required
                 />
               </div>
               <div>
@@ -64,6 +104,9 @@ export default function PostTaskPage() {
                 <input
                   className="w-full border border-gray-300 p-2 rounded-xl"
                   type="text"
+                  value={home}
+                  onChange={(e) => setHome(e.target.value)}
+                  required
                 />
               </div>
               <div>
@@ -73,6 +116,9 @@ export default function PostTaskPage() {
                 <input
                   className="w-full border border-gray-300 p-2 rounded-xl"
                   type="text"
+                  value={street}
+                  onChange={(e) => setStreet(e.target.value)}
+                  required
                 />
               </div>
               <div>
@@ -82,6 +128,9 @@ export default function PostTaskPage() {
                 <input
                   className="w-full border border-gray-300 p-2 rounded-xl"
                   type="text"
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                  required
                 />
               </div>
               <div>
@@ -91,6 +140,9 @@ export default function PostTaskPage() {
                 <input
                   className="w-full border border-gray-300 p-2 rounded-xl"
                   type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  required
                 />
               </div>
               <div>
@@ -100,6 +152,9 @@ export default function PostTaskPage() {
                 <input
                   className="w-full border border-gray-300 p-2 rounded-xl"
                   type="text"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
                 />
               </div>
               <div>
@@ -109,15 +164,17 @@ export default function PostTaskPage() {
                 <input
                   className="w-full border border-gray-300 p-2 rounded-xl"
                   type="text"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  required
                 />
               </div>
-            </form>
-
-            <div className="mt-8 rounded-xl overflow-hidden border border-gray-300">
+              </div>
+              <div className="mt-8 rounded-xl overflow-hidden border border-gray-300">
               <iframe
                 title="Google Map"
                 width="100%"
-                height="400"
+                height="320"
                 frameBorder="0"
                 style={{ border: 0 }}
                 referrerPolicy="no-referrer-when-downgrade"
@@ -127,20 +184,21 @@ export default function PostTaskPage() {
               ></iframe>
             </div>
 
-            <div className="flex justify-between mt-10">
+            <div className="flex justify-between mt-25">
               <Link
                 href="/task-details"
                 className="bg-blue-100 text-gray-400 px-10 py-3 rounded-xl text-lg"
               >
                 Previous
               </Link>
-              <Link
-                href="/estimated-budget"
-                className="bg-blue-400 text-white px-14 py-3 rounded-xl hover:bg-blue-600 text-lg"
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-14 py-3 rounded-xl text-lg"
               >
                 Next
-              </Link>
+              </button>
             </div>
+            </form>  
           </div>
         </main>
       </div>

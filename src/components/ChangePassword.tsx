@@ -29,7 +29,7 @@ export default function ChangePasswordForm() {
 
     try {
   const token = localStorage.getItem("authToken");
-  const res = await fetch("https://5d23a85d22e8.ngrok-free.app/api/auth/change-password", {
+  const res = await fetch("https://3834d40f883a.ngrok-free.app/api/auth/change-password", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

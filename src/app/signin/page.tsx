@@ -19,7 +19,7 @@ export default function SignIn() {
     setLoading(true);
 
     try {
-      const response = await fetch("https://5d23a85d22e8.ngrok-free.app/api/auth/login", {
+      const response = await fetch("https://777b7ef2fa99.ngrok-free.app/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

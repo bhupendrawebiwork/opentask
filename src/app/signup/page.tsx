@@ -22,7 +22,7 @@ export default function SignUp() {
 
   try {
     const response = await fetch(
-      "https://5d23a85d22e8.ngrok-free.app/api/auth/register",
+      "https://777b7ef2fa99.ngrok-free.app/api/auth/register",
       {
         method: "POST",
         headers: {

@@ -16,7 +16,7 @@ export default function ForgetPassword() {
 
     try {
       const response = await fetch(
-        "https://5d23a85d22e8.ngrok-free.app/api/auth/forgot-password",
+        "https://777b7ef2fa99.ngrok-free.app/api/auth/forgot-password",
         {
           method: "POST",
           headers: {

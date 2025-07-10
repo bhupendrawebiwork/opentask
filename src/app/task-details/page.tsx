@@ -1,46 +1,87 @@
 "use client";
+
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
-import Link from "next/link";
+// import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useTaskContext, TaskData } from "@/context/TaskContext";
 
 export default function PostTaskPage() {
+  const { taskData, setTaskData } = useTaskContext();
+  const [title, setTitle] = useState(taskData.title || "");
+  const [description, setDescription] = useState(taskData.description || "");
+  const router = useRouter();
+
+  const handleNext = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Save current step data to global context
+    setTaskData((prev: Partial<TaskData>) => ({
+      ...prev,
+      title,
+      description,
+    }));
+ router.push("/location");
+   
+  };
+  // console.log("Current Task Data:", taskData);
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 p-10 " style={{backgroundColor:"#F7F5F8"}}>
+        <main className="flex-1 p-10" style={{ backgroundColor: "#F7F5F8" }}>
           <h1 className="text-xl font-bold mb-2 text-black ml-10">Post Task</h1>
           <div className="bg-white rounded-xl p-10 m-10">
-          <h1 className="text-xl font-semibold mb-6 text-black">Task Details</h1>
-          <form className="space-y-4">
-            <div>
-              <label className="block text-black text-sm font-semibold mb-1">Title</label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
-            <div>
-              <label className="block text-black text-sm font-semibold mb-1">Description</label>
-              <textarea
-                className="w-full border border-gray-300 rounded-xl px-4 py-2 h-60 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
-            <div className="bg-blue-100 text-gray-900 text-sm px-4 py-2 rounded-xl ">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard.
-            </div>
-            <div className="flex justify-between mt-25">
-              <Link href="#" className="bg-blue-100 text-gray-400 px-10 py-3 rounded-xl cursor-not-allowed  text-lg"
+            <h1 className="text-xl font-semibold mb-6 text-black">
+              Task Details
+            </h1>
+            <form className="space-y-4" onSubmit={handleNext}>
+              <div>
+                <label className="block text-black text-sm font-semibold mb-1">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-black text-sm font-semibold mb-1">
+                  Description
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full border border-gray-300 rounded-xl px-4 py-2 h-60 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  required
+                />
+              </div>
+              <div className="bg-blue-100 text-gray-900 text-sm px-4 py-2 rounded-xl">
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry’s standard.
+              </div>
+              <div className="flex justify-between mt-25">
+                <button
+                  type="button"
+                  className="bg-blue-100 text-gray-400 px-10 py-3 rounded-xl cursor-not-allowed text-lg"
+                  disabled
                 >
-                Previous
-              </Link> 
-              <Link href="/location" className="bg-blue-400 text-white px-14 py-3 rounded-xl hover:bg-blue-600 text-lg">
-                Next
-                </Link>
-              
-            </div>
-          </form>
+                  Previous
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-400 text-white px-14 py-3 rounded-xl hover:bg-blue-600 text-lg"
+                >
+                  Next
+                </button>
+              </div>
+            </form>
           </div>
         </main>
       </div>

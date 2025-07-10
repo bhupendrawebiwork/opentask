@@ -73,7 +73,7 @@ const Navbar = () => {
 
         <li>
           <a
-            href="#"
+            href="task-details"
             className="bg-black text-white px-4 py-2 rounded-xl hover:bg-gray-800"
           >
             Post Task
