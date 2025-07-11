@@ -52,7 +52,7 @@ console.log(mediaFiles  , "mediaFiles ");
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="flex">
         <Sidebar />
 

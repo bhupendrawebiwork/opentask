@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import EditProfileForm from "@/components/EditProfile";
 import ChangePasswordForm from "@/components/ChangePassword";
@@ -43,6 +42,7 @@ export default function ProfilePage() {
         const res = await fetch(baseUrl + "/user", {
           headers: {
             Authorization: `Bearer ${token}`,
+            'ngrok-skip-browser-warning': 'true'
           },
         });
 
@@ -68,6 +68,7 @@ export default function ProfilePage() {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          'ngrok-skip-browser-warning': 'true'
         },
         body: JSON.stringify(updatedData),
       });
@@ -113,7 +114,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#EEF2F8]">
-      <Navbar />
+      {/* {/* <Navbar /> */} 
       <div className="bg-white rounded-3xl shadow p-8 flex justify-between items-center mx-12 mt-4">
         <div className="flex items-center gap-6">
           <div className="relative w-35 h-35 rounded-3xl overflow-hidden">

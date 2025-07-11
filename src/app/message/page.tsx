@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import { Search, Plus, Send, MoreVertical } from "lucide-react";
-import Navbar from "@/components/Navbar";
+
 
 export default function Message() {
   return (
     <>
-      <Navbar/>
+      {/* <Navbar/> */}
     <div className="flex h-[calc(100vh-4rem)] bg-[#EAF1FF] ">
       
       {/* Sidebar */}

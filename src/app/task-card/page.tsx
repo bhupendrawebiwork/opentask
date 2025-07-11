@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import TaskCard from "@/components/Taskcard";
 import TaskDetailsOverlay from "@/components/TaskDetailsOverlay";
-import Navbar from "@/components/Navbar";
 import { baseUrl } from "@/config/constent";
 import { Task } from "@/types/types";
 
@@ -13,6 +12,7 @@ export default function HomePage() {
   const [currentTask, setCurrentTask] = useState({});
   const [loading, setLoading] = useState(true);
   console.log({ tasks });
+  
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -25,6 +25,7 @@ export default function HomePage() {
         const res = await fetch(baseUrl + "/tasks/public", {
           headers: {
             Authorization: `Bearer ${token}`,
+            'ngrok-skip-browser-warning': 'true'
           },
         });
 
@@ -53,7 +54,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white relative">
-      <Navbar />
+      {/* {/* <Navbar /> */} 
 
       <div className="bg-[#F7F5F8] min-h-screen flex justify-center">
         {/* Left Sidebar */}

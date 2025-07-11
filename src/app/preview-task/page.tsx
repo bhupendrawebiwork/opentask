@@ -78,7 +78,7 @@ formData.append("address[phone]", address.phone || "");
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="flex">
         <Sidebar />
 

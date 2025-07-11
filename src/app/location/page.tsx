@@ -1,5 +1,5 @@
 "use client";
-import Navbar from "@/components/Navbar";
+
 import Sidebar from "@/components/Sidebar";
 import { useState } from "react";
 import { useTaskContext } from "@/context/TaskContext";
@@ -42,7 +42,7 @@ const handleNext = (e: React.FormEvent) => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
+      {/* <Navbar /> */} 
       <div className="flex">
         <Sidebar />
         <main className="flex-1 p-10" style={{ backgroundColor: "#F7F5F8" }}>

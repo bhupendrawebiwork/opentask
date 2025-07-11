@@ -1,2 +1,3 @@
-export const baseUrl = 'http://localhost:3000/api';
-export const imgUrl = 'http://localhost:3000';
+export const base = 'a0cc98eac48f.ngrok-free.app'; 
+export const baseUrl = `https://${base}/api`;
+export const imgUrl = `https://${base}`;

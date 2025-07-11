@@ -2,7 +2,7 @@
 
 import { MapPin, Star, Heart, CheckCircle } from "lucide-react";
 
-export default function MyTasks({ task, onClick }) {
+export default function MyTasks({ task, onClick }: any) {
   return (
     <div
       onClick={onClick}
@@ -13,8 +13,13 @@ export default function MyTasks({ task, onClick }) {
           {task.title || "Untitled Task"}
         </h2>
         <span className="text-sm text-blue-500 font-medium flex gap-2">
-          {/* Replace with actual timestamp logic */}
-          Posted just now
+          Posted {/* Ideally, you'd calculate this dynamically */}
+          {task?.createdAt
+            ? `${Math.floor(
+                (Date.now() - new Date(task.createdAt).getTime()) /
+                  (1000 * 60 * 60 * 24)
+              )} Days Ago`
+            : "N/A"}{" "}
           <Heart
             size={20}
             className="text-white p-1 fill-white cursor-pointer bg-blue-500 rounded-full"
@@ -27,13 +32,15 @@ export default function MyTasks({ task, onClick }) {
           <CheckCircle size={16} /> Payment Verified
         </span>
         <span className="flex items-center gap-1 text-yellow-500">
-          {[...Array(5)].map((_, i) => (
+          {[...Array(4)].map((_, i) => (
             <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
           ))}
         </span>
         <span className="flex items-center gap-1">
           <MapPin size={14} className="text-gray-500" />
-          {task.address?.city}, {task.address?.state}, {task.address?.country}
+          {task?.address
+            ? `${task.address.addressLine1}, ${task.address.street}, ${task.address.city} ${task.address.state} ${task.address.country}`
+            : "No address"}
         </span>
       </div>
 
@@ -41,7 +48,7 @@ export default function MyTasks({ task, onClick }) {
         <div className="mt-2">
           <span className="text-sm font-semibold text-gray-500">Budget :–</span>{" "}
           <span className="text-gray-700 text-sm">
-            ₹{task.estimatedAmount}
+            ₹{task?.estimatedAmount?.toLocaleString()}
           </span>
         </div>
         <div className="text-sm text-gray-600 mt-2">
@@ -49,22 +56,18 @@ export default function MyTasks({ task, onClick }) {
         </div>
       </div>
 
-      <p className="text-gray-500 text-sm mt-2">
-        {task.description?.slice(0, 120)}...
-      </p>
+      <p className="text-gray-500 text-sm mt-2">{task?.description}</p>
 
-      {task.tags?.length > 0 && (
-        <div className="mt-4 flex gap-2 flex-wrap">
-          {task.tags.map((tag: string) => (
-            <span
-              key={tag}
-              className="bg-gray-200 text-gray-600 text-xs px-3 py-1 rounded-full"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
+      <div className="mt-4 flex gap-2 flex-wrap">
+        {["API", "INTEGRATION", "AI", "CREATION"].map((tag) => (
+          <span
+            key={tag}
+            className="bg-gray-200 text-gray-600 text-xs px-3 py-1 rounded-full"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }

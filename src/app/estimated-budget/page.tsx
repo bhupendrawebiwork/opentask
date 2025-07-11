@@ -34,7 +34,7 @@ export default function PostTaskPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="flex">
         <Sidebar />
         <main className="flex-1 p-10" style={{ backgroundColor: "#F7F5F8" }}>

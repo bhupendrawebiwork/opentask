@@ -1,11 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import MyTasks from "@/components/MyTasks";
-import Navbar from "@/components/Navbar";
+// import MyTasks from "@/components/MyTasks";
+import TaskCard from "@/components/Taskcard";
 import { baseUrl } from "@/config/constent";
+import { Task } from "@/types/types";
+import TaskDetailsOverlay from "@/components/TaskDetailsOverlay";
 
 export default function MyTasksPage() {
+  const [showOverlay, setShowOverlay] = useState(false);
+  const [currentTask, setCurrentTask] = useState({});
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,6 +25,7 @@ export default function MyTasksPage() {
         const res = await fetch(baseUrl + "/tasks", {
           headers: {
             Authorization: `Bearer ${token}`,
+            'ngrok-skip-browser-warning': 'true'
           },
         });
 
@@ -42,9 +47,14 @@ export default function MyTasksPage() {
     fetchTasks();
   }, []);
 
+  const handleClickOnTask = (taskData: Task) => {
+    setShowOverlay(true);
+    setCurrentTask(taskData)
+  };
+
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
+      {/* {/* <Navbar /> */} 
 
       <div className="bg-[#F7F5F8] min-h-screen flex">
         {/* Sidebar Filters */}
@@ -118,17 +128,20 @@ export default function MyTasksPage() {
         <main className="flex-1 p-10">
           <h1 className="text-2xl font-bold mb-6 text-black">My Posted Tasks</h1>
 
-          {loading ? (
-            <p>Loading...</p>
-          ) : tasks.length === 0 ? (
-            <p>No tasks found.</p>
-          ) : (
-            tasks.map((task: any) => (
-              <MyTasks key={task.id} task={task} />
-            ))
-          )}
+         {tasks.map((task: Task, i) => (
+                     <TaskCard
+                       task={task}
+                       key={i}
+                       onClick={(task: Task) => handleClickOnTask(task)}
+                     />
+                   ))}
         </main>
       </div>
+
+      {/* Overlay */}
+            {showOverlay && (
+              <TaskDetailsOverlay task={currentTask} onClose={() => setShowOverlay(false)} />
+            )}
     </div>
   );
 }
