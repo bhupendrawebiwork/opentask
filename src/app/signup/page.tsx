@@ -16,46 +16,43 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
-  setError(""); // clear any previous error
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(""); // clear any previous error
 
-  try {
-    const response = await fetch(
-      baseUrl + "/auth/register",
-      {
+    try {
+      const response = await fetch(baseUrl + "/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-        },
+        },  
         body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Registration failed");
+        return;
       }
-    );
 
-    const data = await response.json();
+      //  Store token
+      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-    if (!response.ok) {
-      setError(data.message || "Registration failed");
-      return;
+      // alert("Signup successful!");
+      router.push("/profile");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong.");
+      }
+    } finally {
+      setLoading(false);
     }
-
-    //  Store token
-    localStorage.setItem("authToken", data.token);
-
-    // alert("Signup successful!");
-    router.push("/profile");
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      setError(err.message); 
-    } else {
-      setError("Something went wrong.");
-    }
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4">

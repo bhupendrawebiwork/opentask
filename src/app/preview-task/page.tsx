@@ -1,7 +1,7 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
+import Navbar from "@/components/layout/Navbar";
+import Sidebar from "@/components/layout/Sidebar";
 import Image from "next/image";
 import { Pen } from "lucide-react";
 import { useTaskContext } from "@/context/TaskContext";

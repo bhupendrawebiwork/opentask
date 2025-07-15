@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 // import MyTasks from "@/components/MyTasks";
-import TaskCard from "@/components/Taskcard";
+import TaskCard from "@/components/common/Taskcard";
 import { baseUrl } from "@/config/constent";
 import { Task } from "@/types/types";
-import TaskDetailsOverlay from "@/components/TaskDetailsOverlay";
+import TaskDetailsOverlay from "@/components/common/TaskDetailsOverlay";
 
 export default function MyTasksPage() {
   const [showOverlay, setShowOverlay] = useState(false);

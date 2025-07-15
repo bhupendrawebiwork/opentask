@@ -1,7 +1,7 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
+import Navbar from "@/components/layout/Navbar";
+import Sidebar from "@/components/layout/Sidebar";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTaskContext } from "@/context/TaskContext";

@@ -4,7 +4,8 @@ import "./globals.css";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { TaskProvider } from "@/context/TaskContext";
-import ClientLayout from "@/components/ClientLayout";
+import ClientLayout from "@/components/common/ClientLayout";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,6 +27,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>

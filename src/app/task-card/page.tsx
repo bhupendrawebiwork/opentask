@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import TaskCard from "@/components/Taskcard";
-import TaskDetailsOverlay from "@/components/TaskDetailsOverlay";
+import TaskCard from "@/components/common/Taskcard";
+import TaskDetailsOverlay from "@/components/common/TaskDetailsOverlay";
 import { baseUrl } from "@/config/constent";
 import { Task } from "@/types/types";
 

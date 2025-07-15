@@ -35,12 +35,13 @@ export default function SignIn() {
 
       // Store token
       localStorage.setItem("authToken", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       toast.success("Login successful!");
 
       setTimeout(() => {
         router.push("/profile");
-      }, 1000); 
+      }, 0); 
     } catch (err) {
       toast.error("Something went wrong. Please try again.");
       console.error("Login Error:", err);

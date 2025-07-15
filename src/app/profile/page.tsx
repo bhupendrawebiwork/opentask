@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import EditProfileForm from "@/components/EditProfile";
-import ChangePasswordForm from "@/components/ChangePassword";
+import ChangePasswordForm from "@/components/common/ChangePassword";
 import {
   User,
   Wallet,
@@ -19,8 +19,10 @@ import {
   Globe,
 } from "lucide-react";
 import { baseUrl, imgUrl } from "@/config/constent";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function ProfilePage() {
+  const {logout} = useAuthStore()
   const [activeTab, setActiveTab] = useState("edit");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>({});
@@ -212,7 +214,7 @@ export default function ProfilePage() {
               </li>
             ))}
 
-            <li className="flex items-center gap-3 text-red-500 font-semibold cursor-pointer mt-4 hover:text-white hover:bg-red-500 p-3 rounded-xl">
+            <li onClick={()=>logout()} className="flex items-center gap-3 text-red-500 font-semibold cursor-pointer mt-4 hover:text-white hover:bg-red-500 p-3 rounded-xl">
               <LogOut size={18} /> Log out
             </li>
           </ul>

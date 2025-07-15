@@ -9,7 +9,7 @@ import {
   Check,
 } from "lucide-react";
 import Image from "next/image";
-import JobApplicationOverlay from "./JobApplicationOverlay";
+import JobApplicationOverlay from "../JobApplicationOverlay";
 import { useState } from "react";
 import { imgUrl } from "@/config/constent";
 
