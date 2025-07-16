@@ -12,22 +12,11 @@ const Navbar = () => {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (!token) return;
-
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+    if (!token || !user) return;
     setIsLoggedIn(true);
-
-    fetch(baseUrl + "/user", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'ngrok-skip-browser-warning': 'true',
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data?.name) setUserName(data.name);
-      })
-      .catch((err) => console.error("Error fetching user:", err));
+    setUserName(JSON.parse(user)?.name);
   }, []);
 
   return (
@@ -45,7 +34,9 @@ const Navbar = () => {
               <Link
                 href="/"
                 className={`pb-2 ${
-                  pathname === "/" ? "border-b-2 border-blue-500 " : "hover:text-blue-500"
+                  pathname === "/"
+                    ? "border-b-2 border-blue-500 "
+                    : "hover:text-blue-500"
                 }`}
               >
                 Browse Tasks
@@ -56,7 +47,9 @@ const Navbar = () => {
               <Link
                 href="/my-tasks"
                 className={`pb-2 ${
-                  pathname === "/my-tasks" ? "border-b-2 border-blue-500 " : "hover:text-blue-500"
+                  pathname === "/my-tasks"
+                    ? "border-b-2 border-blue-500 "
+                    : "hover:text-blue-500"
                 }`}
               >
                 My Tasks
@@ -67,7 +60,9 @@ const Navbar = () => {
               <Link
                 href="/message"
                 className={`pb-2 ${
-                  pathname === "/message" ? "border-b-2 border-blue-500 " : "hover:text-blue-500"
+                  pathname === "/message"
+                    ? "border-b-2 border-blue-500 "
+                    : "hover:text-blue-500"
                 }`}
               >
                 Message
@@ -78,7 +73,9 @@ const Navbar = () => {
               <Link
                 href="/saved-jobs"
                 className={`pb-2 ${
-                  pathname === "/saved-jobs" ? "border-b-2 border-blue-500 " : "hover:text-blue-500"
+                  pathname === "/saved-jobs"
+                    ? "border-b-2 border-blue-500 "
+                    : "hover:text-blue-500"
                 }`}
               >
                 Save Jobs
@@ -87,7 +84,7 @@ const Navbar = () => {
 
             <li>
               <Link
-                href="/task-details"
+                href="/my-tasks/create-task"
                 className="bg-black text-white px-4 py-2 rounded-xl hover:bg-gray-800"
               >
                 Post Task
@@ -95,7 +92,7 @@ const Navbar = () => {
             </li>
 
             <li>
-              <Link href="/profile" className="flex items-center gap-2">
+              <Link href="/auth/profile" className="flex items-center gap-2">
                 <Image
                   src="/assets/social-icons/profile.png"
                   alt="Profile"
@@ -110,9 +107,11 @@ const Navbar = () => {
           <>
             <li>
               <Link
-                href="/signin"
+                href="/auth/login"
                 className={`pb-2 ${
-                  pathname === "/signin" ? "border-b-2 border-blue-500 " : "hover:text-blue-500"
+                  pathname === "/signin"
+                    ? "border-b-2 border-blue-500 "
+                    : "hover:text-blue-500"
                 }`}
               >
                 Sign In
@@ -121,9 +120,11 @@ const Navbar = () => {
 
             <li>
               <Link
-                href="/signup"
+                href="auth/register"
                 className={`pb-2 ${
-                  pathname === "/signup" ? "border-b-2 border-blue-500 " : "hover:text-blue-500"
+                  pathname === "/signup"
+                    ? "border-b-2 border-blue-500 "
+                    : "hover:text-blue-500"
                 }`}
               >
                 Sign Up

@@ -1,104 +1,110 @@
-"use client"
+"use client";
 
-import type React from "react"
+import { useState } from "react";
+import Link from "next/link";
+import Input from "@/components/Input";
+import Button from "@/components/Button";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { baseUrl } from "@/config/constent";
+import { useAuthStore } from "@/store/useAuthStore";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useAppStore } from "@/lib/store"
-import Link from "next/link"
-
-export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const { setUser } = useAppStore()
-  const router = useRouter()
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-
-    // Mock authentication - replace with real auth
-    setTimeout(() => {
-      const mockUser = {
-        id: "1",
-        email,
-        name: email.split("@")[0],
-        role: "client" as const, // Default role
-        createdAt: new Date(),
+export default function SignIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { login } = useAuthStore();
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await login({ email, password });
+      if (response.status != 200) {
+        toast.error(response.message || "Login failed");
+        return;
       }
-
-      setUser(mockUser)
-
-      // Redirect based on role
-      switch (mockUser.role) {
-        case "client":
-          router.push("/client")
-          break
-        case "provider":
-          router.push("/provider")
-          break
-        case "admin":
-          router.push("/admin")
-          break
-        default:
-          router.push("/")
-      }
-
-      setIsLoading(false)
-    }, 1000)
-  }
+      router.push("/auth/profile");
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.");
+      console.error("Login Error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Welcome Back</CardTitle>
-          <CardDescription>Sign in to your TaskConnect account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+    <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div
+        className="flex flex-col md:flex-row bg-white rounded-4xl shadow-lg overflow-hidden max-w-5xl w-full h-170"
+        style={{
+          backgroundImage: "linear-gradient(to bottom right, #2778E0, #6BE353)",
+        }}
+      >
+        <div className="text-white flex-1 flex flex-col justify-center items-center space-y-2">
+          <h2 className="text-3xl font-bold">Login Your Account</h2>
+          <p className="text-center mb-8">Welcome Back!</p>
+          <Image
+            src="/assets/signin.png"
+            alt="Signin"
+            width={300}
+            height={300}
+          />
+        </div>
+
+        <div className="flex-1/9 p-8 sm:py-20 rounded-4xl bg-white">
+          <h3 className="text-2xl font-bold mb-6 text-black">Login</h3>
+
+          <form className="space-y-8" onSubmit={handleLogin}>
+            <div>
+              <label className="block font-semibold text-md text-gray-500">
+                Email
+              </label>
               <Input
-                id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                required
+                placeholder="Enter Your Email"
+                className="text-black w-full border border-blue-300 rounded-lg"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+            <div>
+              <label className="block font-semibold text-md text-gray-500">
+                Password
+              </label>
               <Input
-                id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
+                placeholder="Enter Your Password"
+                className="text-black w-full border border-blue-300 rounded-lg"
               />
+              <Link
+                href="/forget-password"
+                className="text-blue-400 flex justify-end mt-1 text-sm"
+              >
+                Forgot Password?
+              </Link>
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign In"}
+            <div className="flex items-center text-sm">
+              <input type="checkbox" id="terms" className="mr-2" />
+              <label htmlFor="terms" className="text-black">
+                Not a Member?{" "}
+                <Link href="/signup" className="text-blue-400 font-bold">
+                  Sign Up
+                </Link>
+              </label>
+            </div>
+
+            <Button type="submit" className="w-full bg-white-400">
+              {loading ? "Logging In..." : "Login"}
             </Button>
           </form>
-
-          <div className="mt-4 text-center text-sm">
-            <span className="text-gray-600">Don't have an account? </span>
-            <Link href="/auth/register" className="text-blue-600 hover:underline">
-              Sign up
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
+        </div>
+      </div>
+    </main>
+  );
 }

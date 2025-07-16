@@ -6,9 +6,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTaskContext } from "@/context/TaskContext";
 import Link from "next/link";
+import { useTaskStore } from "@/store/useTaskStore";
 
 export default function PostTaskPage() {
-  const { taskData, setTaskData } = useTaskContext();
+  const { taskData, setTaskData } = useTaskStore();
   const router = useRouter();
 
   // Initialize from context if available
@@ -17,19 +18,21 @@ export default function PostTaskPage() {
   const [expectedCompletionDate, setExpectedCompletionDate] = useState(
     taskData.expectedCompletionDate || ""
   );
-  const [budgetComment, setBudgetComment] = useState(taskData.budgetComment || "");
+  const [budgetComment, setBudgetComment] = useState(
+    taskData.budgetComment || ""
+  );
 
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
 
-    setTaskData((prev) => ({
-  ...prev,
-  estimatedAmount: estimatedAmount ? parseFloat(estimatedAmount) : 0,
-  expectedCompletionDate,
-  budgetComment,
-}));
+    setTaskData({
+      ...taskData,
+      estimatedAmount: estimatedAmount ? parseFloat(estimatedAmount) : 0,
+      expectedCompletionDate,
+      budgetComment,
+    });
 
-    router.push("/media");
+    router.push("media");
   };
 
   return (
@@ -40,7 +43,9 @@ export default function PostTaskPage() {
         <main className="flex-1 p-10" style={{ backgroundColor: "#F7F5F8" }}>
           <h1 className="text-xl font-bold mb-2 text-black ml-10">Post Task</h1>
           <div className="bg-white rounded-xl p-10 m-10">
-            <h1 className="text-xl font-semibold mb-6 text-black">Estimated Budget</h1>
+            <h1 className="text-xl font-semibold mb-6 text-black">
+              Estimated Budget
+            </h1>
 
             <form className="gap-6 mb-50" onSubmit={handleNext}>
               <div className="grid grid-cols-2 gap-6 mb-8">
@@ -85,7 +90,7 @@ export default function PostTaskPage() {
 
               <div className="flex justify-between mt-10 mb-20">
                 <Link
-                  href = "/location"
+                  href="/location"
                   className="bg-blue-100 text-gray-400 px-10 py-3 rounded-xl text-lg"
                 >
                   Previous

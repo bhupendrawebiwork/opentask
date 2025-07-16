@@ -1,67 +1,28 @@
-
-
 "use client";
 
 import { useEffect, useState } from "react";
 import TaskCard from "@/components/common/Taskcard";
 import TaskDetailsOverlay from "@/components/common/TaskDetailsOverlay";
-import { baseUrl } from "@/config/constent";
-import { useAuthStore } from "@/store/useAuthStore";
 import { Task } from "@/types/types";
-import { Loader } from "lucide-react";
+import { useTaskStore } from "@/store/useTaskStore";
 
 export default function HomePage() {
   const [showOverlay, setShowOverlay] = useState(false);
-  const [tasks, setTasks] = useState([]);
   const [currentTask, setCurrentTask] = useState({});
-  const [loading, setLoading] = useState(true);
+  const { fetchTasks, tasks, loading } = useTaskStore();
 
-  // if (isCheckingAuth && !authUser)
-  //   return (
-  //     <div className="flex items-center justify-center h-screen">
-  //       <Loader className="size-10 animate-spin" />
-  //     </div>
-  //   );
-  
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const token = localStorage.getItem("authToken");
-
-const res = await fetch(baseUrl + "/tasks/public", {
-  headers: {
-    ...(token && { Authorization: `Bearer ${token}` }),
-    'ngrok-skip-browser-warning': 'true'
-  },
-});
-
-
-        const resjson = await res.json(); // debug response
-        try {
-          if (!res.ok)
-            throw new Error(resjson.message || "Failed to load tasks");
-          setTasks(resjson.data);
-        } catch (err) {
-          console.error("Failed to parse JSON:", resjson.error.message);
-        }
-      } catch (err) {
-        console.error("Error fetching tasks:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchTasks();
   }, []);
 
   const handleClickOnTask = (taskData: Task) => {
     setShowOverlay(true);
-    setCurrentTask(taskData)
+    setCurrentTask(taskData);
   };
 
   return (
     <div className="min-h-screen bg-white relative">
-      {/* {/* <Navbar /> */} 
+      {/* {/* <Navbar /> */}
 
       <div className="bg-[#F7F5F8] min-h-screen flex justify-center">
         {/* Left Sidebar */}
@@ -157,7 +118,10 @@ const res = await fetch(baseUrl + "/tasks/public", {
 
       {/* Overlay */}
       {showOverlay && (
-        <TaskDetailsOverlay task={currentTask} onClose={() => setShowOverlay(false)} />
+        <TaskDetailsOverlay
+          task={currentTask}
+          onClose={() => setShowOverlay(false)}
+        />
       )}
     </div>
   );

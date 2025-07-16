@@ -6,55 +6,25 @@ import TaskCard from "@/components/common/Taskcard";
 import { baseUrl } from "@/config/constent";
 import { Task } from "@/types/types";
 import TaskDetailsOverlay from "@/components/common/TaskDetailsOverlay";
+import { useTaskStore } from "@/store/useTaskStore";
 
 export default function MyTasksPage() {
   const [showOverlay, setShowOverlay] = useState(false);
   const [currentTask, setCurrentTask] = useState({});
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { mytasks: tasks, fetchMyTasks } = useTaskStore();
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const token = localStorage.getItem("authToken");
-        if (!token) {
-          console.error("No token found");
-          return;
-        }
-
-        const res = await fetch(baseUrl + "/tasks", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'ngrok-skip-browser-warning': 'true'
-          },
-        });
-
-        const resjson = await res.json(); // debug response
-        try {
-         
-          if (!res.ok) throw new Error(resjson.message || "Failed to load tasks");
-          setTasks(resjson.data);
-        } catch (err) {
-          console.error("Failed to parse JSON:", resjson.error.message);
-        }
-      } catch (err) {
-        console.error("Error fetching tasks:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTasks();
-  }, []);
+    fetchMyTasks();
+  }, [fetchMyTasks]);
 
   const handleClickOnTask = (taskData: Task) => {
     setShowOverlay(true);
-    setCurrentTask(taskData)
+    setCurrentTask(taskData);
   };
 
   return (
     <div className="min-h-screen bg-white">
-      {/* {/* <Navbar /> */} 
+      {/* {/* <Navbar /> */}
 
       <div className="bg-[#F7F5F8] min-h-screen flex">
         {/* Sidebar Filters */}
@@ -78,7 +48,10 @@ export default function MyTasksPage() {
               "Intermediate & Professionals",
               "Expert & High Level Exp.",
             ].map((label) => (
-              <label key={label} className="flex items-center space-x-2 text-sm mb-2">
+              <label
+                key={label}
+                className="flex items-center space-x-2 text-sm mb-2"
+              >
                 <input type="checkbox" />
                 <span>{label}</span>
               </label>
@@ -87,12 +60,17 @@ export default function MyTasksPage() {
 
           <div className="mb-4">
             <h4 className="font-semibold mb-2">Job Type</h4>
-            {["Hourly base", "Monthly base", "Contract base"].map((label, i) => (
-              <label key={label} className="flex items-center space-x-2 text-sm mb-2">
-                <input type="checkbox" defaultChecked={i === 0} />
-                <span>{label}</span>
-              </label>
-            ))}
+            {["Hourly base", "Monthly base", "Contract base"].map(
+              (label, i) => (
+                <label
+                  key={label}
+                  className="flex items-center space-x-2 text-sm mb-2"
+                >
+                  <input type="checkbox" defaultChecked={i === 0} />
+                  <span>{label}</span>
+                </label>
+              )
+            )}
 
             <div className="flex gap-2 mt-2">
               <input
@@ -116,7 +94,10 @@ export default function MyTasksPage() {
               "$500 To $1k",
               "$1k To $5k",
             ].map((range) => (
-              <label key={range} className="flex items-center space-x-2 text-sm mb-2">
+              <label
+                key={range}
+                className="flex items-center space-x-2 text-sm mb-2"
+              >
                 <input type="checkbox" />
                 <span>{range}</span>
               </label>
@@ -126,22 +107,27 @@ export default function MyTasksPage() {
 
         {/* Task List */}
         <main className="flex-1 p-10">
-          <h1 className="text-2xl font-bold mb-6 text-black">My Posted Tasks</h1>
+          <h1 className="text-2xl font-bold mb-6 text-black">
+            My Posted Tasks
+          </h1>
 
-         {tasks.map((task: Task, i) => (
-                     <TaskCard
-                       task={task}
-                       key={i}
-                       onClick={(task: Task) => handleClickOnTask(task)}
-                     />
-                   ))}
+          {tasks.map((task: Task, i) => (
+            <TaskCard
+              task={task}
+              key={i}
+              onClick={(task: Task) => handleClickOnTask(task)}
+            />
+          ))}
         </main>
       </div>
 
       {/* Overlay */}
-            {showOverlay && (
-              <TaskDetailsOverlay task={currentTask} onClose={() => setShowOverlay(false)} />
-            )}
+      {showOverlay && (
+        <TaskDetailsOverlay
+          task={currentTask}
+          onClose={() => setShowOverlay(false)}
+        />
+      )}
     </div>
   );
 }

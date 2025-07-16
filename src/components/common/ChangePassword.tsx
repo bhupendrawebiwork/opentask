@@ -3,23 +3,18 @@
 import { useState } from "react";
 import { Lock } from "lucide-react";
 import { toast } from "react-toastify";
+import { useUserStore } from "@/store/userStore";
 
 export default function ChangePasswordForm() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { changePassword } = useUserStore();
+
   const handleChangePassword = async (e: React.FormEvent) => {
-    e.preventDefault(); 
+    e.preventDefault();
     setLoading(true);
-
-    const token = localStorage.getItem("authToken");
-
-    if (!token) {
-      toast.error("User not authenticated");
-      setLoading(false);
-      return;
-    }
 
     if (!currentPassword || !newPassword) {
       toast.error("Please fill all fields");
@@ -28,30 +23,12 @@ export default function ChangePasswordForm() {
     }
 
     try {
-  const token = localStorage.getItem("authToken");
-  const res = await fetch("https://3834d40f883a.ngrok-free.app/api/auth/change-password", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ currentPassword, newPassword }),
-  });
-
-  const data = await res.json();
-  console.log("Request:", { currentPassword, newPassword, token });
-  console.log("Response:", res.status, data);
-
-  if (!res.ok) {
-    toast.error(data.message || "Change failed");
-    return;
-  }
-
-  toast.success("Password changed successfully");
-} catch (err) {
-  console.error("Change password error:", err);
-  toast.error("Something went wrong");
-}
+      await changePassword({ currentPassword, newPassword });
+      setCurrentPassword("");
+      setNewPassword("");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -92,7 +69,7 @@ export default function ChangePasswordForm() {
             disabled={loading}
             className="bg-blue-400 text-white px-8 py-3 rounded-xl hover:bg-blue-500 transition"
           >
-            Update Password
+            {loading ? "Updating..." : "Update Password"}
           </button>
         </div>
       </form>

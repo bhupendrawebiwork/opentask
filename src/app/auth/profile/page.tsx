@@ -18,14 +18,15 @@ import {
   Star,
   Globe,
 } from "lucide-react";
-import { baseUrl, imgUrl } from "@/config/constent";
+import { imgUrl } from "@/config/constent";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useUserStore } from "@/store/userStore";
 
 export default function ProfilePage() {
-  const {logout} = useAuthStore()
+  const { user, loading, fetchUser, updateUser, uploadAvatar } = useUserStore();
+  const { logout } = useAuthStore();
+
   const [activeTab, setActiveTab] = useState("edit");
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>({});
 
   const menuItems = [
     { key: "edit", label: "Edit Profile", icon: <User size={18} /> },
@@ -36,95 +37,22 @@ export default function ProfilePage() {
   ];
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = localStorage.getItem("authToken");
-        if (!token) return;
-
-        const res = await fetch(baseUrl + "/user", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'ngrok-skip-browser-warning': 'true'
-          },
-        });
-
-        const resJson = await res.json();
-        if (!res.ok) throw new Error(resJson.message);
-
-        setUser(resJson);
-      } catch (err) {
-        console.error("Error fetching user:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUser();
   }, []);
 
-  const handleUpdate = async (updatedData: any) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const res = await fetch(baseUrl + "/user", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          'ngrok-skip-browser-warning': 'true'
-        },
-        body: JSON.stringify(updatedData),
-      });
-      const resJson = await res.json();
-      if (!res.ok) throw new Error(resJson.message);
-      alert("Profile updated successfully");
-      setUser(resJson);
-    } catch (err: any) {
-      alert("Update failed: " + err.message);
-    }
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) uploadAvatar(file);
   };
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  const formData = new FormData();
-  formData.append("avatar", file);
-
-  try {
-    const token = localStorage.getItem("authToken");
-    const res = await fetch(`${baseUrl}/user/avatar`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-
-    const result = await res.json();
-    if (!res.ok) throw new Error(result.message || "Upload failed");
-
-    alert("Profile image updated successfully!");
-
-    // 👇 Update local state to reflect new avatar
-    setUser(result);
-
-  } catch (err) {
-    console.error("Upload error:", err);
-    alert("Failed to upload profile image");
-  }
-};
-
 
   return (
     <div className="min-h-screen bg-[#EEF2F8]">
-      {/* {/* <Navbar /> */} 
       <div className="bg-white rounded-3xl shadow p-8 flex justify-between items-center mx-12 mt-4">
         <div className="flex items-center gap-6">
           <div className="relative w-35 h-35 rounded-3xl overflow-hidden">
             <Image
               src={
-                user?.avatar
-                  ? `${imgUrl}${user.avatar}`
-                  : "/assets/profile.png"
+                user?.avatar ? `${imgUrl}${user.avatar}` : "/assets/profile.png"
               }
               alt="User"
               fill
@@ -159,6 +87,7 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+
         <div className="text-right">
           <div className="flex gap-2 mb-1">
             <p className="flex items-center gap-1 text-green-500 font-bold text-xs">
@@ -186,7 +115,7 @@ export default function ProfilePage() {
             <select
               className="rounded px-5 py-2 text-sm bg-gray-600 text-white text-center"
               value={user?.lang || "english"}
-              onChange={(e) => handleUpdate({ lang: e.target.value })}
+              onChange={(e) => updateUser({ lang: e.target.value })}
             >
               <option value="english">English</option>
               <option value="hindi">Hindi</option>
@@ -213,8 +142,10 @@ export default function ProfilePage() {
                 {item.icon} {item.label}
               </li>
             ))}
-
-            <li onClick={()=>logout()} className="flex items-center gap-3 text-red-500 font-semibold cursor-pointer mt-4 hover:text-white hover:bg-red-500 p-3 rounded-xl">
+            <li
+              onClick={logout}
+              className="flex items-center gap-3 text-red-500 font-semibold cursor-pointer mt-4 hover:text-white hover:bg-red-500 p-3 rounded-xl"
+            >
               <LogOut size={18} /> Log out
             </li>
           </ul>
@@ -222,7 +153,7 @@ export default function ProfilePage() {
 
         <div className="w-3/4 bg-white p-8 rounded-3xl shadow">
           {activeTab === "edit" && (
-            <EditProfileForm user={user} handleUpdate={handleUpdate} />
+            <EditProfileForm user={user} handleUpdate={updateUser} />
           )}
           {activeTab === "password" && <ChangePasswordForm />}
         </div>

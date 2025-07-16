@@ -7,13 +7,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTaskContext } from "@/context/TaskContext";
 import Link from "next/link";
+import { useTaskStore } from "@/store/useTaskStore";
 
 export default function PostTaskPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [mediaFiles, setMediaFiles] = useState<any>([]);
   const router = useRouter();
 
-  const { setTaskData } = useTaskContext();
+  const { taskData, setTaskData } = useTaskStore();
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
@@ -38,16 +39,18 @@ export default function PostTaskPage() {
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
 
-
     // Save media URLs in context (temporary preview URLs)
-    const mediaUrls = mediaFiles.map((file) =>( {url:URL.createObjectURL(file), file:file}));
-console.log(mediaFiles  , "mediaFiles ");
-    setTaskData((prev) => ({
-      ...prev,
-      media: mediaUrls,
+    const mediaUrls = mediaFiles.map((file) => ({
+      url: URL.createObjectURL(file),
+      file: file,
     }));
+    console.log(mediaFiles, "mediaFiles ");
+    setTaskData({
+      ...taskData,
+      media: mediaUrls,
+    });
 
-    router.push("/preview-task");
+    router.push("preview-task");
   };
 
   return (
@@ -59,7 +62,10 @@ console.log(mediaFiles  , "mediaFiles ");
         <main className="flex-1 p-10 bg-[#F7F5F8]">
           <h1 className="text-xl font-bold mb-4 text-black ml-10">Post Task</h1>
 
-          <form onSubmit={handleNext} className="bg-white rounded-xl px-10 py-8 mx-10">
+          <form
+            onSubmit={handleNext}
+            className="bg-white rounded-xl px-10 py-8 mx-10"
+          >
             <h2 className="text-md font-semibold text-black mb-6">Media</h2>
 
             {/* Upload Section */}

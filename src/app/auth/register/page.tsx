@@ -1,160 +1,173 @@
-"use client"
+"use client";
 
-import type React from "react"
+import { useState } from "react";
+import Link from "next/link";
+import Input from "@/components/Input";
+import Button from "@/components/Button";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { baseUrl } from "@/config/constent";
+import { useAuthStore } from "@/store/useAuthStore";
 
-import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useAppStore } from "@/lib/store"
-import type { UserRole } from "@/lib/store"
-import Link from "next/link"
-
-export default function RegisterPage() {
-  const searchParams = useSearchParams()
-  const defaultRole = (searchParams.get("role") as UserRole) || "client"
-
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    role: defaultRole,
-  })
-  const [isLoading, setIsLoading] = useState(false)
-  const { setUser } = useAppStore()
-  const router = useRouter()
+export default function SignUp() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { signup } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
+    setLoading(true);
+    setError(""); // clear any previous error
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match")
-      return
+    try {
+      const response = await signup({ name, email, password });
+      if (response.status == 201) router.push("/auth/profile");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong.");
+      }
+    } finally {
+      setLoading(false);
     }
-
-    setIsLoading(true)
-
-    // Mock registration - replace with real auth
-    setTimeout(() => {
-      const newUser = {
-        id: Date.now().toString(),
-        email: formData.email,
-        name: formData.name,
-        role: formData.role as UserRole,
-        createdAt: new Date(),
-      }
-
-      setUser(newUser)
-
-      // Redirect based on role
-      switch (newUser.role) {
-        case "client":
-          router.push("/client")
-          break
-        case "provider":
-          router.push("/provider")
-          break
-        case "admin":
-          router.push("/admin")
-          break
-        default:
-          router.push("/")
-      }
-
-      setIsLoading(false)
-    }, 1000)
-  }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Create Account</CardTitle>
-          <CardDescription>Join TaskConnect and start connecting</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+    <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div
+        className="flex flex-col md:flex-row bg-white rounded-4xl shadow-lg overflow-hidden max-w-5xl w-full h-170"
+        style={{
+          backgroundImage: "linear-gradient(to bottom right, #2778E0, #6BE353)",
+        }}
+      >
+        <div className="text-white p-10 flex-1 flex flex-col justify-center items-center space-y-3">
+          <h2 className="text-3xl font-bold text-left leading-tight">
+            Create Your Account
+          </h2>
+          <p className="text-center mb-6">
+            Create your account to find freelance jobs or hire top talent.
+          </p>
+          <Image
+            src="/assets/signup.png"
+            alt="Signup Illustration"
+            width={300}
+            height={300}
+          />
+        </div>
+
+        <div className="flex-1/9 p-8 sm:py-20 rounded-4xl bg-white">
+          <h3 className="text-2xl font-bold mb-6 text-black">
+            Create Your Account
+          </h3>
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label className="block font-semibold text-md text-gray-500">
+                Name
+              </label>
               <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-                placeholder="Enter your full name"
-                required
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter Your Name"
+                className="text-black w-full border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none placeholder-gray-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+            <div>
+              <label className="font-semibold text-md text-gray-500">
+                Email
+              </label>
               <Input
-                id="email"
                 type="email"
-                value={formData.email}
-                onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
-                placeholder="Enter your email"
-                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter Your Email"
+                className="text-black w-full border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none placeholder-gray-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="role">I want to</Label>
-              <Select
-                value={formData.role}
-                onValueChange={(value) => setFormData((prev) => ({ ...prev, role: value as UserRole }))}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="client">Hire service providers</SelectItem>
-                  <SelectItem value="provider">Provide services</SelectItem>
-                  <SelectItem value="admin">Manage platform</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+            <div>
+              <label className="font-semibold text-md text-gray-500">
+                Password
+              </label>
               <Input
-                id="password"
                 type="password"
-                value={formData.password}
-                onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
-                placeholder="Create a password"
-                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter Your Password"
+                className="text-black w-full border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none placeholder-gray-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                value={formData.confirmPassword}
-                onChange={(e) => setFormData((prev) => ({ ...prev, confirmPassword: e.target.value }))}
-                placeholder="Confirm your password"
-                required
-              />
+            <div className="flex items-center text-sm">
+              <input type="checkbox" id="terms" className="mr-2" />
+              <label htmlFor="terms" className="text-black">
+                I agree to the{" "}
+                <a href="#" className="text-blue-400 underline">
+                  terms of service
+                </a>{" "}
+                and{" "}
+                <a href="#" className="text-blue-400 underline">
+                  privacy policy
+                </a>
+              </label>
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Creating account..." : "Create Account"}
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+
+            <Button type="submit" className="w-full bg-white-400 mb-14">
+              {loading ? "Signing Up..." : "Sign Up"}
             </Button>
-          </form>
 
-          <div className="mt-4 text-center text-sm">
-            <span className="text-gray-600">Already have an account? </span>
-            <Link href="/auth/login" className="text-blue-600 hover:underline">
-              Sign in
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
+            <div className="flex items-center justify-center space-x-4 mt-4 mb-8">
+              <button type="button">
+                <Image
+                  src="/assets/social-icons/google.svg"
+                  alt="Google"
+                  width={24}
+                  height={24}
+                />
+              </button>
+              <button type="button">
+                <Image
+                  src="/assets/social-icons/facebook.svg"
+                  alt="Facebook"
+                  width={24}
+                  height={24}
+                />
+              </button>
+              <button type="button">
+                <Image
+                  src="/assets/social-icons/x.svg"
+                  alt="Twitter"
+                  width={24}
+                  height={24}
+                />
+              </button>
+              <button type="button">
+                <Image
+                  src="/assets/social-icons/linkedin.svg"
+                  alt="Linkedin"
+                  width={24}
+                  height={24}
+                />
+              </button>
+            </div>
+
+            <p className="text-sm text-center mt-6 text-black">
+              Already Have An Account?{" "}
+              <Link href="/signin" className="text-blue-400 font-bold">
+                Login
+              </Link>
+            </p>
+          </form>
+        </div>
+      </div>
+    </main>
+  );
 }

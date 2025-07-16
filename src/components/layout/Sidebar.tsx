@@ -14,11 +14,11 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   const steps = [
-    { icon: ClipboardList, label: "Task Details", slug: "task-details" },
-    { icon: MapPin, label: "Location", slug: "location" },
-    { icon: Calculator, label: "Estimated Budget", slug: "estimated-budget" },
-    { icon: ImageIcon, label: "Media", slug: "media" },
-    { icon: FileText, label: "Preview", slug: "preview-task" },
+    { icon: ClipboardList, label: "Task Details", slug: "my-tasks/create-task" },
+    { icon: MapPin, label: "Location", slug: "my-tasks/location" },
+    { icon: Calculator, label: "Estimated Budget", slug: "my-tasks/estimated-budget" },
+    { icon: ImageIcon, label: "Media", slug: "my-tasks/media" },
+    { icon: FileText, label: "Preview", slug: "my-tasks/preview-task" },
   ];
 
   const currentStep = steps.findIndex((step) =>

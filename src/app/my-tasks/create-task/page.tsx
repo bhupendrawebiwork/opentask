@@ -2,13 +2,14 @@
 
 import Navbar from "@/components/layout/Navbar";
 import Sidebar from "@/components/layout/Sidebar";
+import { useTaskStore } from "@/store/useTaskStore";
+import { Task } from "@/types/types";
 // import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useTaskContext, TaskData } from "@/context/TaskContext";
 
 export default function PostTaskPage() {
-  const { taskData, setTaskData } = useTaskContext();
+  const { taskData, setTaskData } = useTaskStore();
   const [title, setTitle] = useState(taskData.title || "");
   const [description, setDescription] = useState(taskData.description || "");
   const router = useRouter();
@@ -17,13 +18,12 @@ export default function PostTaskPage() {
     e.preventDefault();
 
     // Save current step data to global context
-    setTaskData((prev: Partial<TaskData>) => ({
-      ...prev,
+    setTaskData({
+      ...taskData,
       title,
       description,
-    }));
- router.push("/location");
-   
+    });
+    router.push("location");
   };
   // console.log("Current Task Data:", taskData);
 

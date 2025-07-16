@@ -4,43 +4,43 @@ import Navbar from "@/components/layout/Navbar";
 import Sidebar from "@/components/layout/Sidebar";
 import Image from "next/image";
 import { Pen } from "lucide-react";
-import { useTaskContext } from "@/context/TaskContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { baseUrl } from "@/config/constent";
+import { Task } from "@/types/types";
+import { useTaskStore } from "@/store/useTaskStore";
 
 export default function PostTaskPage() {
-  const { taskData } = useTaskContext();
+  const { taskData, submitTask } = useTaskStore();
   const router = useRouter();
 
-  const address = taskData.address as TaskData["address"] || {};
+  const address = (taskData.address as Task["address"]) || {};
 
   const handleSubmit = async () => {
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      alert("You must be logged in to submit a task.");
-      return;
-    }
-
     const formData = new FormData();
-
     // Append primitive fields
     formData.append("title", taskData.title || "");
     formData.append("description", taskData.description || "");
-    formData.append("estimatedAmount", taskData.estimatedAmount?.toString() || "");
-    formData.append("expectedCompletionDate", taskData.expectedCompletionDate || "");
+    formData.append(
+      "estimatedAmount",
+      taskData.estimatedAmount?.toString() || ""
+    );
+    formData.append(
+      "expectedCompletionDate",
+      taskData.expectedCompletionDate || ""
+    );
     formData.append("budgetComment", taskData.budgetComment || "");
 
     // Append address fields
-    
+
     formData.append("address[addressLine1]", address.addressLine1 || "");
-formData.append("address[addressLine2]", address.addressLine2 || "");
-formData.append("address[home]", address.home || "");
-formData.append("address[street]", address.street || "");
-formData.append("address[state]", address.state || "");
-formData.append("address[city]", address.city || "");
-formData.append("address[country]", address.country || "");
-formData.append("address[phone]", address.phone || "");
+    formData.append("address[addressLine2]", address.addressLine2 || "");
+    formData.append("address[home]", address.home || "");
+    formData.append("address[street]", address.street || "");
+    formData.append("address[state]", address.state || "");
+    formData.append("address[city]", address.city || "");
+    formData.append("address[country]", address.country || "");
+    formData.append("address[phone]", address.phone || "");
 
     // Append media files
     if (Array.isArray(taskData.media)) {
@@ -51,28 +51,11 @@ formData.append("address[phone]", address.phone || "");
       });
     }
 
-    try {
-      const response = await fetch(baseUrl + "/tasks", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          // DO NOT SET "Content-Type" manually
-        },
-        body: formData,
-      });
+    const res = await submitTask(formData);
+    console.log("res -- ", res);
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        console.error("Server Error:", result);
-        throw new Error(result.message || "Something went wrong");
-      }
-
-      alert("Task posted successfully!");
+    if (res.status == 201) {
       router.push("/my-tasks");
-    } catch (err: any) {
-      console.error("Error submitting task:", err);
-      alert(`Failed to post task: ${err.message}`);
     }
   };
 
@@ -86,12 +69,15 @@ formData.append("address[phone]", address.phone || "");
           <h1 className="text-xl font-bold mb-4 text-black ml-10">Post Task</h1>
 
           <div className="bg-white rounded-xl px-10 py-8 mx-10 space-y-10">
-
             {/* Task Details */}
             <section>
               <div className="flex justify-between items-start mb-4">
-                <h2 className="text-lg font-semibold text-black">Task Details</h2>
-                <a href="#"><Pen className="w-8 h-8 p-2 bg-black rounded-full text-white" /></a>
+                <h2 className="text-lg font-semibold text-black">
+                  Task Details
+                </h2>
+                <a href="#">
+                  <Pen className="w-8 h-8 p-2 bg-black rounded-full text-white" />
+                </a>
               </div>
               <p className="text-gray-800 text-sm font-semibold">Title</p>
               <p className="text-sm mb-3">{taskData.title}</p>
@@ -112,20 +98,41 @@ formData.append("address[phone]", address.phone || "");
             <section>
               <div className="flex justify-between items-start mb-4">
                 <h2 className="text-lg font-semibold text-black">Location</h2>
-                <a href="#"><Pen className="w-8 h-8 p-2 bg-black rounded-full text-white" /></a>
+                <a href="#">
+                  <Pen className="w-8 h-8 p-2 bg-black rounded-full text-white" />
+                </a>
               </div>
 
               <div className="grid grid-cols-2 gap-8">
                 <div className="space-y-1 text-sm">
-                  <p><span className="font-semibold text-black">Type:</span><br />In Person</p>
+                  <p>
+                    <span className="font-semibold text-black">Type:</span>
+                    <br />
+                    In Person
+                  </p>
 
                   <h6 className="mt-2 font-semibold text-black">Address:</h6>
                   <div className="grid grid-cols-2 mt-2">
-                    <p className="text-gray-500"><span className="font-semibold">Street:</span> {address.street}</p>
-                    <p className="text-gray-500"><span className="font-semibold">City:</span> {address.city}</p>
-                    <p className="text-gray-500"><span className="font-semibold">Country:</span> {address.country}</p>
-                    <p className="text-gray-500"><span className="font-semibold">State:</span> {address.state}</p>
-                    <p className="text-gray-500"><span className="font-semibold">Phone:</span> {address.phone}</p>
+                    <p className="text-gray-500">
+                      <span className="font-semibold">Street:</span>{" "}
+                      {address.street}
+                    </p>
+                    <p className="text-gray-500">
+                      <span className="font-semibold">City:</span>{" "}
+                      {address.city}
+                    </p>
+                    <p className="text-gray-500">
+                      <span className="font-semibold">Country:</span>{" "}
+                      {address.country}
+                    </p>
+                    <p className="text-gray-500">
+                      <span className="font-semibold">State:</span>{" "}
+                      {address.state}
+                    </p>
+                    <p className="text-gray-500">
+                      <span className="font-semibold">Phone:</span>{" "}
+                      {address.phone}
+                    </p>
                   </div>
                 </div>
 
@@ -152,13 +159,23 @@ formData.append("address[phone]", address.phone || "");
             {/* Budget & Date */}
             <section>
               <div className="flex justify-between items-start mb-4">
-                <h2 className="text-lg font-semibold text-black">Estimated budget & completion date</h2>
-                <a href="#"><Pen className="w-8 h-8 p-2 bg-black rounded-full text-white" /></a>
+                <h2 className="text-lg font-semibold text-black">
+                  Estimated budget & completion date
+                </h2>
+                <a href="#">
+                  <Pen className="w-8 h-8 p-2 bg-black rounded-full text-white" />
+                </a>
               </div>
               <div className="text-sm space-y-1">
-                <p><span className="font-semibold text-black">Budget:</span></p>
+                <p>
+                  <span className="font-semibold text-black">Budget:</span>
+                </p>
                 <p className="mb-4"> ₹{taskData.estimatedAmount}</p>
-                <p><span className="font-semibold text-black">Completion Date:</span></p>
+                <p>
+                  <span className="font-semibold text-black">
+                    Completion Date:
+                  </span>
+                </p>
                 <p>{taskData.expectedCompletionDate}</p>
               </div>
             </section>
@@ -169,7 +186,9 @@ formData.append("address[phone]", address.phone || "");
             <section>
               <div className="flex justify-between items-start mb-4">
                 <h2 className="text-lg font-semibold text-black">Media</h2>
-                <a href="#"><Pen className="w-8 h-8 p-2 bg-black rounded-full text-white" /></a>
+                <a href="#">
+                  <Pen className="w-8 h-8 p-2 bg-black rounded-full text-white" />
+                </a>
               </div>
               <div className="grid grid-cols-8 gap-0">
                 {taskData.media?.map((file, index) => (
