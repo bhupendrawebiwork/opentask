@@ -1,3 +1,3 @@
-export const base = 'a0cc98eac48f.ngrok-free.app'; 
+export const base = '192.168.0.116:3000'; 
 export const baseUrl = `https://${base}/api`;
 export const imgUrl = `https://${base}`;
