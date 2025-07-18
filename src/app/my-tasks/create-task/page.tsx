@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/layout/Navbar";
 import Sidebar from "@/components/layout/Sidebar";
 import { useTaskStore } from "@/store/useTaskStore";
 import { Task } from "@/types/types";

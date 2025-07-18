@@ -189,7 +189,7 @@ export default function PostTaskPage() {
 
               <div className="flex justify-between mt-25">
                 <Link
-                  href="/task-details"
+                  href="/my-tasks/create-task"
                   className="bg-blue-100 text-gray-400 px-10 py-3 rounded-xl text-lg"
                 >
                   Previous
