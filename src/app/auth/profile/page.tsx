@@ -44,6 +44,7 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
     if (file) uploadAvatar(file);
   };
+console.log("`${imgUrl}${user.avatar}`   " , `${imgUrl}${user?.avatar}`);
 
   return (
     <div className="min-h-screen bg-[#EEF2F8]">

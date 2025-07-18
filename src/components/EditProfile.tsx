@@ -7,8 +7,6 @@ export default function EditProfileForm({ user, handleUpdate }: any) {
     name: "",
     email: "",
     phone: "",
-    position: "",
-    companyName: "",
   });
 
   useEffect(() => {
@@ -17,8 +15,6 @@ export default function EditProfileForm({ user, handleUpdate }: any) {
         name: user.name || "",
         email: user.email || "",
         phone: user.phone || "",
-        position: user.position || "",
-        companyName: user.companyName || "",
       });
     }
   }, [user]);
@@ -97,7 +93,7 @@ export default function EditProfileForm({ user, handleUpdate }: any) {
         </div>
 
         {/* Position */}
-        <div>
+        {/* <div>
           <label className="text-sm text-gray-700 mb-1 block font-semibold">
             Position
           </label>
@@ -115,10 +111,10 @@ export default function EditProfileForm({ user, handleUpdate }: any) {
               className="w-full pl-10 pr-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none font-semibold text-sm"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Company */}
-        <div>
+        {/* <div>
           <label className="text-sm text-gray-700 mb-1 block font-semibold">
             Company Name
           </label>
@@ -136,7 +132,7 @@ export default function EditProfileForm({ user, handleUpdate }: any) {
               className="w-full pl-10 pr-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none font-semibold text-sm"
             />
           </div>
-        </div>
+        </div> */}
         <div className="text-left mt-14">
           <button
             type="submit"

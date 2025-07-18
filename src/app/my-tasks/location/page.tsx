@@ -10,17 +10,17 @@ export default function PostTaskPage() {
   const [isRemote, setIsRemote] = useState(false);
   const { taskData, setTaskData } = useTaskStore();
   const [addressLine1, setAddressLine1] = useState(
-    taskData.address?.addressLine1 || ""
+    taskData.location?.addressLine1 || ""
   );
   const [addressLine2, setAddressLine2] = useState(
-    taskData.address?.addressLine2 || ""
+    taskData.location?.addressLine2 || ""
   );
-  const [home, setHome] = useState(taskData.address?.home || "");
-  const [street, setStreet] = useState(taskData.address?.street || "");
-  const [state, setState] = useState(taskData.address?.state || "");
-  const [city, setCity] = useState(taskData.address?.city || "");
-  const [country, setCountry] = useState(taskData.address?.country || "");
-  const [phone, setPhone] = useState(taskData.address?.phone || "");
+  const [home, setHome] = useState(taskData.location?.home || "");
+  const [street, setStreet] = useState(taskData.location?.street || "");
+  const [state, setState] = useState(taskData.location?.state || "");
+  const [city, setCity] = useState(taskData.location?.city || "");
+  const [country, setCountry] = useState(taskData.location?.country || "");
+  const [phone, setPhone] = useState(taskData.location?.phone || "");
   const router = useRouter();
 
   const handleNext = (e: React.FormEvent) => {
@@ -29,7 +29,7 @@ export default function PostTaskPage() {
     // Save current step data to global context
     setTaskData({
       ...taskData,
-      address: {
+      location: {
         addressLine1,
         addressLine2,
         home,

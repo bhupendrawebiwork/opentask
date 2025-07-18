@@ -14,7 +14,7 @@ export default function PostTaskPage() {
   const { taskData, submitTask } = useTaskStore();
   const router = useRouter();
 
-  const address = (taskData.address as Task["address"]) || {};
+  const address = (taskData.location as Task["location"]) || {};
 
   const handleSubmit = async () => {
     const formData = new FormData();
@@ -22,25 +22,22 @@ export default function PostTaskPage() {
     formData.append("title", taskData.title || "");
     formData.append("description", taskData.description || "");
     formData.append(
-      "estimatedAmount",
-      taskData.estimatedAmount?.toString() || ""
+      "estimateBudget",
+      taskData.estimateBudget?.toString() || ""
     );
-    formData.append(
-      "expectedCompletionDate",
-      taskData.expectedCompletionDate || ""
-    );
-    formData.append("budgetComment", taskData.budgetComment || "");
+    formData.append("deadline", taskData.deadline || "");
+    formData.append("note", taskData.note || "");
 
     // Append address fields
 
-    formData.append("address[addressLine1]", address.addressLine1 || "");
-    formData.append("address[addressLine2]", address.addressLine2 || "");
-    formData.append("address[home]", address.home || "");
-    formData.append("address[street]", address.street || "");
-    formData.append("address[state]", address.state || "");
-    formData.append("address[city]", address.city || "");
-    formData.append("address[country]", address.country || "");
-    formData.append("address[phone]", address.phone || "");
+    formData.append("location[addressLine1]", address.addressLine1 || "");
+    formData.append("location[addressLine2]", address.addressLine2 || "");
+    formData.append("location[home]", address.home || "");
+    formData.append("location[street]", address.street || "");
+    formData.append("location[state]", address.state || "");
+    formData.append("location[city]", address.city || "");
+    formData.append("location[country]", address.country || "");
+    formData.append("location[phone]", address.phone || "");
 
     // Append media files
     if (Array.isArray(taskData.media)) {
@@ -85,9 +82,9 @@ export default function PostTaskPage() {
               <p className="text-gray-800 text-sm font-semibold">Description</p>
               <p className="text-sm mb-3">{taskData.description}</p>
 
-              {taskData.budgetComment && (
+              {taskData.note && (
                 <p className="bg-gray-100 text-sm p-3 rounded-md text-gray-700">
-                  {taskData.budgetComment}
+                  {taskData.note}
                 </p>
               )}
             </section>
@@ -170,13 +167,13 @@ export default function PostTaskPage() {
                 <p>
                   <span className="font-semibold text-black">Budget:</span>
                 </p>
-                <p className="mb-4"> ₹{taskData.estimatedAmount}</p>
+                <p className="mb-4"> ₹{taskData.estimateBudget}</p>
                 <p>
                   <span className="font-semibold text-black">
                     Completion Date:
                   </span>
                 </p>
-                <p>{taskData.expectedCompletionDate}</p>
+                <p>{taskData.deadline}</p>
               </div>
             </section>
 

@@ -13,23 +13,19 @@ export default function PostTaskPage() {
   const router = useRouter();
 
   // Initialize from context if available
-  const [estimatedAmount, setEstimatedAmount] = useState<string>("");
+  const [estimateBudget, setEstimateBudget] = useState<string>("");
 
-  const [expectedCompletionDate, setExpectedCompletionDate] = useState(
-    taskData.expectedCompletionDate || ""
-  );
-  const [budgetComment, setBudgetComment] = useState(
-    taskData.budgetComment || ""
-  );
+  const [deadline, setDeadline] = useState(taskData.deadline || "");
+  const [note, setNote] = useState(taskData.note || "");
 
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
 
     setTaskData({
       ...taskData,
-      estimatedAmount: estimatedAmount ? parseFloat(estimatedAmount) : 0,
-      expectedCompletionDate,
-      budgetComment,
+      estimateBudget: estimateBudget ? parseFloat(estimateBudget) : 0,
+      deadline,
+      note,
     });
 
     router.push("media");
@@ -57,8 +53,8 @@ export default function PostTaskPage() {
                     className="w-full border border-gray-300 p-2 rounded-xl text-sm"
                     type="number"
                     placeholder="4500"
-                    value={estimatedAmount}
-                    onChange={(e) => setEstimatedAmount(e.target.value)}
+                    value={estimateBudget}
+                    onChange={(e) => setEstimateBudget(e.target.value)}
                     required
                   />
                 </div>
@@ -69,8 +65,8 @@ export default function PostTaskPage() {
                   <input
                     className="w-full border border-gray-300 p-2 rounded-xl text-sm"
                     type="date"
-                    value={expectedCompletionDate}
-                    onChange={(e) => setExpectedCompletionDate(e.target.value)}
+                    value={deadline}
+                    onChange={(e) => setDeadline(e.target.value)}
                     required
                   />
                 </div>
@@ -83,8 +79,8 @@ export default function PostTaskPage() {
                 <textarea
                   className="w-full border border-gray-300 rounded-xl px-4 py-2 h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
                   placeholder="Comment for budget and other specifications, any special points about your work"
-                  value={budgetComment}
-                  onChange={(e) => setBudgetComment(e.target.value)}
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
                 />
               </div>
 

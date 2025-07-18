@@ -22,7 +22,10 @@ interface UserStore {
   fetchUser: () => Promise<void>;
   updateUser: (data: Partial<User>) => Promise<void>;
   uploadAvatar: (file: File) => Promise<void>;
-  changePassword: (payload: { currentPassword: string; newPassword: string }) => Promise<void>;
+  changePassword: (payload: {
+    currentPassword: string;
+    newPassword: string;
+  }) => Promise<void>;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -65,7 +68,7 @@ export const useUserStore = create<UserStore>((set) => ({
       });
 
       toast.success("Avatar uploaded successfully");
-      set({ user: res.data });
+      set((state) => ({ user: { ...state.user, ...res.data } }));
     } catch (err: any) {
       console.error("Avatar upload error:", err);
       toast.error(err?.response?.data?.message || "Upload failed");
