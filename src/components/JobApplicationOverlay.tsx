@@ -211,4 +211,4 @@ export default function JobApplicationOverlay({ onClose }) {
       </div>
     </div>
   );
-}
+} 

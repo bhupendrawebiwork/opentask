@@ -27,10 +27,11 @@ export default function HomePage() {
     fetchTasks();
   }, []);
 
-  const handleClickOnTask = (taskData: Task) => {
-    setShowOverlay(true);
-    setCurrentTask(taskData);
-  };
+  const handleClickOnTask = (task: Task) => {
+  setShowOverlay(true);
+  setCurrentTask({ ...task, isMine: false }); // you’re not the owner
+};
+
 
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch = task.title.toLowerCase().includes(search.toLowerCase());

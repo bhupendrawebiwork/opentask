@@ -56,6 +56,19 @@ const Navbar = () => {
               </Link>
             </li>
 
+             <li>
+              <Link
+                href="/my-bids"
+                className={`pb-2 ${
+                  pathname === "/my-bids"
+                    ? "border-b-2 border-blue-500 "
+                    : "hover:text-blue-500"
+                }`}
+              >
+                My Bids
+              </Link>
+            </li>
+
             <li>
               <Link
                 href="/message"
@@ -122,7 +135,7 @@ const Navbar = () => {
               <Link
                 href="auth/register"
                 className={`pb-2 ${
-                  pathname === "/signup"
+                  pathname === "/register"
                     ? "border-b-2 border-blue-500 "
                     : "hover:text-blue-500"
                 }`}

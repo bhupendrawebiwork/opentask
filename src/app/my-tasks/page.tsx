@@ -17,10 +17,11 @@ export default function MyTasksPage() {
     fetchMyTasks();
   }, [fetchMyTasks]);
 
-  const handleClickOnTask = (taskData: Task) => {
-    setShowOverlay(true);
-    setCurrentTask(taskData);
-  };
+ const handleClickOnTask = (task: Task) => {
+  setShowOverlay(true);
+  setCurrentTask({ ...task, isMine: true }); // you own this task
+};
+
 
   return (
     <div className="min-h-screen bg-white">
