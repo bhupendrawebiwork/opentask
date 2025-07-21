@@ -22,7 +22,7 @@
     voiceNoteUrl?: string;
     transcript: string;
     priceQuote: string;
-    onEditTranscript?: () => void;
+    // onEditTranscript?: () => void;
     onReRecord?: () => void;
   }
 
@@ -36,7 +36,7 @@
     voiceNoteUrl,
     transcript,
     priceQuote,
-    onEditTranscript,
+    // onEditTranscript,
     onReRecord,
   }: TradieApplicationCardProps) {
     const router = useRouter();
@@ -94,7 +94,7 @@
         <div className="bg-gray-50 border border-gray-200 p-3 rounded-md text-sm text-gray-700">
           <span className="block mb-1 font-medium text-gray-600">Transcript:</span>
           <p className="whitespace-pre-wrap">{transcript}</p>
-          {onEditTranscript && (
+          {/* {onEditTranscript && (
             <button
               onClick={onEditTranscript}
               className="mt-2 flex items-center text-xs text-blue-500 hover:underline"
@@ -102,7 +102,7 @@
               <Pencil size={14} className="mr-1" />
               Edit Transcript
             </button>
-          )}
+          )} */}
         </div>
 
         {/* Price Quote */}
