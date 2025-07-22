@@ -71,9 +71,12 @@ export interface Bid {
   taskId: string;
   userId: string;
   createdAt: string;
+  
   user?: {
     id: string;
     name: string;
     email: string;
+    isVerified?:boolean
+    phone:string
   };
 }

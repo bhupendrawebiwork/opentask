@@ -171,7 +171,7 @@ export default function TaskDetailsOverlay({ task, onClose }: any) {
               </button>
             ) : (
               <button
-                onClick={() => router.push(`/bids?taskId=${task.id}`)}
+                onClick={() => router.push(`/bids?taskId=${task.id}&title=${task?.title}`)}
                 className="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition"
               >
                 View Bids

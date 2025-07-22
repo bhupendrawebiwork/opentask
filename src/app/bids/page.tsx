@@ -1,38 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TradieApplicationCard from "@/components/common/TradieProfileCard"; // Adjust if your actual path is different
-
-const dummyApplications = [
-  {
-    id: 1,
-    profileImage: "/assets/profile.png",
-    name: "Imran Khan",
-    rating: 4.8,
-    isVerified: true,
-    email: "imran@example.com",
-    contactNumber: "+91 9876543210",
-    voiceNoteUrl: "/audio/imran-application.mp3",
-    transcript:
-      "Namaste, Imran hoon. 10 saal se kaam kar raha hoon. Kal 11 baje aa sakta hoon.",
-    priceQuote: "₹5000",
-  },
-  {
-    id: 2,
-    profileImage: "/assets/profile.png",
-    name: "Sarah Leh",
-    rating: 4.6,
-    isVerified: true,
-    email: "sarah@example.com",
-    contactNumber: "+91 9876543211",
-    voiceNoteUrl: "/audio/sarah-application.mp3",
-    transcript:
-      "Namaste, Sarah hoon. 8 saal se kaam kar rahi hoon. Kal 11 baje aa sakti hoon.",
-    priceQuote: "₹1500",
-  },
-];
+import { useBidStore } from "@/store/useBidStore";
+import { useSearchParams } from "next/navigation";
+import { Bid } from "@/types/types";
 
 export default function BidsPage() {
+  const searchParams = useSearchParams();
+  const taskId = searchParams.get("taskId");
+  const title = searchParams.get("title");
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
@@ -40,6 +17,13 @@ export default function BidsPage() {
   const [minRate, setMinRate] = useState("");
   const [maxRate, setMaxRate] = useState("");
   const [selectedFixedPrices, setSelectedFixedPrices] = useState<string[]>([]);
+  const { fetchBidsForTask, bids } = useBidStore();
+
+  useEffect(() => {
+    if (taskId) {
+      fetchBidsForTask(taskId);
+    }
+  }, [taskId]);
 
   return (
     <div className="flex min-h-screen bg-[#FAFAFB]">
@@ -68,29 +52,39 @@ export default function BidsPage() {
         {/* Levels */}
         <div className="mb-4">
           <h4 className="font-semibold mb-2">Levels</h4>
-          {["Entry Level", "Intermediate & Professionals", "Expert & high Level Exp."].map(
-            (label) => (
-              <label key={label} className="flex items-center space-x-2 text-sm mb-2">
-                <input
-                  type="checkbox"
-                  checked={selectedLevels.includes(label)}
-                  onChange={() =>
-                    setSelectedLevels((prev) =>
-                      prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]
-                    )
-                  }
-                />
-                <span>{label}</span>
-              </label>
-            )
-          )}
+          {[
+            "Entry Level",
+            "Intermediate & Professionals",
+            "Expert & high Level Exp.",
+          ].map((label) => (
+            <label
+              key={label}
+              className="flex items-center space-x-2 text-sm mb-2"
+            >
+              <input
+                type="checkbox"
+                checked={selectedLevels.includes(label)}
+                onChange={() =>
+                  setSelectedLevels((prev) =>
+                    prev.includes(label)
+                      ? prev.filter((l) => l !== label)
+                      : [...prev, label]
+                  )
+                }
+              />
+              <span>{label}</span>
+            </label>
+          ))}
         </div>
 
         {/* Job Type */}
         <div className="mb-4">
           <h4 className="font-semibold mb-2">Job Type</h4>
           {["Hourly base", "Monthly base", "Contract base"].map((label) => (
-            <label key={label} className="flex items-center space-x-2 text-sm mb-2">
+            <label
+              key={label}
+              className="flex items-center space-x-2 text-sm mb-2"
+            >
               <input
                 type="checkbox"
                 checked={selectedTypes.includes(label)}
@@ -127,43 +121,49 @@ export default function BidsPage() {
         {/* Fixed Price */}
         <div>
           <h4 className="font-semibold mb-2">Fixed Price</h4>
-          {["Less Than $100", "$100 To $500", "$500 To $1k", "$1k To $5k"].map((range) => (
-            <label key={range} className="flex items-center space-x-2 text-sm mb-2">
-              <input
-                type="checkbox"
-                checked={selectedFixedPrices.includes(range)}
-                onChange={() =>
-                  setSelectedFixedPrices((prev) =>
-                    prev.includes(range)
-                      ? prev.filter((r) => r !== range)
-                      : [...prev, range]
-                  )
-                }
-              />
-              <span>{range}</span>
-            </label>
-          ))}
+          {["Less Than $100", "$100 To $500", "$500 To $1k", "$1k To $5k"].map(
+            (range) => (
+              <label
+                key={range}
+                className="flex items-center space-x-2 text-sm mb-2"
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedFixedPrices.includes(range)}
+                  onChange={() =>
+                    setSelectedFixedPrices((prev) =>
+                      prev.includes(range)
+                        ? prev.filter((r) => r !== range)
+                        : [...prev, range]
+                    )
+                  }
+                />
+                <span>{range}</span>
+              </label>
+            )
+          )}
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 p-10">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">Bids on this Task</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">
+          Bids on {title} 
+        </h1>
 
-        {dummyApplications.map((app) => (
+        {bids.map((bid: Bid) => (
           <TradieApplicationCard
-            key={app.id}
-            profileImage={app.profileImage}
-            name={app.name}
-            rating={app.rating}
-            isVerified={app.isVerified}
-            email={app.email}
-            contactNumber={app.contactNumber}
-            voiceNoteUrl={app.voiceNoteUrl}
-            transcript={app.transcript}
-            priceQuote={app.priceQuote}
-            onEditTranscript={() => alert(`Edit transcript for ${app.name}`)}
-            onReRecord={() => alert(`Re-record for ${app.name}`)}
+            key={bid.id}
+            profileImage={"/assets/profile.png"} // Optional: Replace with dynamic if available
+            name={bid.user?.name || "Unknown"}
+            rating={4.5} // Static/default rating until you implement reviews
+            isVerified={bid.user?.isVerified}
+            email={bid.user?.email}
+            contactNumber={bid.user?.phone}
+            voiceNoteUrl={""} // Not in API, you can add later
+            transcript={bid.comment || "No comment provided"}
+            priceQuote={`₹${bid.offeredPrice}`}
+            onReRecord={() => alert(`Re-record for ${bid.user?.name}`)}
           />
         ))}
       </main>

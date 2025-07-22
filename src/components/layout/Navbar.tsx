@@ -5,8 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { baseUrl } from "@/config/constent";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const Navbar = () => {
+  const { authUser } = useAuthStore();
   const pathname = usePathname().toString();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
@@ -16,8 +18,8 @@ const Navbar = () => {
     const user = localStorage.getItem("user");
     if (!token || !user) return;
     setIsLoggedIn(true);
-    setUserName(JSON.parse(user)?.name);
-  }, []);
+    setUserName(authUser?.name||"");
+  }, [authUser]);
 
   return (
     <nav className="flex justify-between items-center px-16 py-4 bg-white shadow-sm border-b border-gray-200 pb-2">
@@ -56,7 +58,7 @@ const Navbar = () => {
               </Link>
             </li>
 
-             <li>
+            <li>
               <Link
                 href="/my-bids"
                 className={`pb-2 ${

@@ -6,11 +6,13 @@ import { Bid } from "@/types/types"; // You should define this type
 interface BidStore {
   bidData: Partial<Bid>;
   bids: Bid[];
+  myBids: Bid[];
   loading: boolean;
   setBidData: (data: Partial<Bid>) => void;
   updateBidField: <K extends keyof Bid>(key: K, value: Bid[K]) => void;
   resetBid: () => void;
   fetchBidsForTask: (taskId: string) => Promise<void>;
+  fetchBidsForUser: (taskId: string) => Promise<void>;
   submitBid: (formData: FormData) => Promise<Response>;
   updateBid: (id: string, formData: FormData) => Promise<Response>;
   deleteBid: (id: string) => Promise<void>;
@@ -19,6 +21,7 @@ interface BidStore {
 export const useBidStore = create<BidStore>((set) => ({
   bidData: {},
   bids: [],
+  myBids: [],
   loading: false,
 
   setBidData: (data) => set({ bidData: data }),
@@ -45,7 +48,18 @@ export const useBidStore = create<BidStore>((set) => ({
       set({ loading: false });
     }
   },
-
+  fetchBidsForUser: async (userId: string) => {
+    set({ loading: true });
+    try {
+      const res = await axiosInstance.get(`/bids/user/${userId}`);
+      set({ myBids: res.data });
+    } catch (err: any) {
+      console.error("Error fetching bids:", err);
+      toast.error(err?.response?.data?.message || "Failed to fetch bids");
+    } finally {
+      set({ loading: false });
+    }
+  },
   submitBid: async (formData) => {
     try {
       const res = await axiosInstance.post("/bids", formData);
