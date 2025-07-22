@@ -182,7 +182,7 @@ export default function TaskDetailsOverlay({ task, onClose }: any) {
       </div>
 
       {showApplyOverlay && (
-        <JobApplicationOverlay onClose={() => setShowApplyOverlay(false)} />
+        <JobApplicationOverlay taskId={task?.id} onClose={() => setShowApplyOverlay(false)} />
       )}
     </div>
   );

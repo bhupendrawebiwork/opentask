@@ -13,7 +13,6 @@ export const useChatStore = create((set, get) => ({
   getUsers: async () => {
     set({ isUsersLoading: true });
     const { authUser } = useAuthStore.getState();
-    console.log("get users ---", authUser);
     try {
       const res = await axiosInstance.get("/user/all/" + authUser.id);
       set({
@@ -68,20 +67,25 @@ export const useChatStore = create((set, get) => ({
   },
 
   subscribeToMessages: () => {
-    console.log("newMessage --");
-    const { selectedUser } = get();
+    const { selectedUser , authUser} = get();
     if (!selectedUser) return;
 
     const socket = useAuthStore.getState().socket;
 
     socket.on("newMessage", (newMessage) => {
-      console.log("newMessage --", newMessage);
+      console.log("newMessage ", newMessage);
+      const isForCurrentChat =
+        (newMessage.senderId === selectedUser._id &&
+          newMessage.receiverId === authUser.id) ||
+        (newMessage.receiverId === selectedUser._id &&
+          newMessage.senderId === authUser.id);
 
-      const isMessageSentFromSelectedUser =
-        newMessage.receiverId === selectedUser._id;
-      if (!isMessageSentFromSelectedUser) {
-        return;
-      }
+      if (!isForCurrentChat) return;
+      // const isMessageSentFromSelectedUser =
+      //   newMessage.receiverId === selectedUser._id;
+      // if (!isMessageSentFromSelectedUser) {
+      //   // return;
+      // }
 
       set({
         messages: [...get().messages, newMessage],

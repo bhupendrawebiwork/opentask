@@ -8,29 +8,150 @@ import {
   Trash2,
   Play,
   Pause,
-  RefreshCcw,
 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useBidStore } from "@/store/useBidStore"; // ✅ import store
+import { toast } from "react-toastify";
 
-export default function JobApplicationOverlay({ onClose }) {
+export default function JobApplicationOverlay({
+  onClose,
+  taskId,
+}: {
+  onClose: () => void;
+  taskId: string;
+}) {
   const [isRecording, setIsRecording] = useState(false);
-  const [audioBlob, setAudioBlob] = useState(null);
+  const [audioBlob, setAudioBlob] = useState<File | null>(null);
   const [transcript, setTranscript] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recognitionRef = useRef<any>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
 
-  const handleRecord = () => {
-    setIsRecording(!isRecording);
+  const [offeredPrice, setOfferedPrice] = useState("");
+  const [costType, setCostType] = useState(""); // optional
+  const [estimatedTime, setEstimatedTime] = useState(""); // in hours
+  const [comment, setComment] = useState("");
 
-    // You'd use MediaRecorder API here in real case
-    if (!isRecording) {
-      setTimeout(() => {
-        setAudioBlob("dummy-blob.mp3"); // Replace with actual blob
-        setTranscript(
-          "Namaste, Imran hoon. 10 saal se kaam kar raha hoon. Kal 11 baje aa sakta hoon."
-        );
-        setIsRecording(false);
-      }, 3000);
+  const { submitBid } = useBidStore();
+
+  // Initialize speech recognition
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition =
+        window.webkitSpeechRecognition || window.SpeechRecognition;
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        // recognition.lang = "en-US"; // You can change this to 'hi-IN' for Hindi
+        const userLang = navigator.language || navigator.userLanguage;
+        recognition.lang = userLang.startsWith("hi") ? "hi-IN" : "en-US";
+
+        recognition.onresult = (event) => {
+          let finalTranscript = "";
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+              finalTranscript += event.results[i][0].transcript;
+            }
+          }
+          if (finalTranscript) {
+            setTranscript((prev) => prev + finalTranscript + " ");
+          }
+        };
+
+        recognition.onerror = (event) => {
+          console.error("Speech recognition error:", event.error);
+          toast.error("Speech recognition error. Please try again.");
+        };
+
+        recognitionRef.current = recognition;
+      } else {
+        console.warn("Speech recognition not supported");
+        toast.warning("Speech recognition not supported in this browser");
+      }
+    }
+  }, []);
+
+  const handleRecord = async () => {
+    if (isRecording) {
+      // Stop recording
+      if (
+        mediaRecorderRef.current &&
+        mediaRecorderRef.current.state === "recording"
+      ) {
+        mediaRecorderRef.current.stop();
+      }
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      setIsRecording(false);
+    } else {
+      // Start recording
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+        if (recognitionRef.current) {
+          try {
+            recognitionRef.current.stop(); // gracefully reset any previous instance
+          } catch (e) {
+            console.warn("Error stopping previous recognition", e);
+          }
+
+          recognitionRef.current.start();
+        }
+        // Start audio recording
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+        audioChunksRef.current = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            audioChunksRef.current.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          if (recognitionRef.current) {
+            recognitionRef.current.stop();
+          }
+          const audioBlob = new Blob(audioChunksRef.current, {
+            type: "audio/wav",
+          });
+          const audioFile = new File([audioBlob], "recording.wav", {
+            type: "audio/wav",
+          });
+          setAudioBlob(audioFile);
+
+          // Create audio URL for playback
+          const audioUrl = URL.createObjectURL(audioBlob);
+          if (audioRef.current) {
+            audioRef.current.src = audioUrl;
+          }
+
+          // Stop all tracks
+          stream.getTracks().forEach((track) => track.stop());
+        };
+
+        // Start speech recognition
+
+        if (recognitionRef.current) {
+          try {
+            recognitionRef.current.stop();
+          } catch (err) {
+            console.warn("Error stopping previous recognition", err);
+          }
+          recognitionRef.current.start();
+        }
+
+        mediaRecorder.start();
+        setIsRecording(true);
+      } catch (error) {
+        console.error("Error accessing microphone:", error);
+        toast.error("Could not access microphone. Please check permissions.");
+      }
     }
   };
 
@@ -44,10 +165,56 @@ export default function JobApplicationOverlay({ onClose }) {
     setIsPlaying(!isPlaying);
   };
 
+  // Handle audio events
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      const handlePlay = () => setIsPlaying(true);
+      const handlePause = () => setIsPlaying(false);
+      const handleEnded = () => setIsPlaying(false);
+
+      audio.addEventListener("play", handlePlay);
+      audio.addEventListener("pause", handlePause);
+      audio.addEventListener("ended", handleEnded);
+
+      return () => {
+        audio.removeEventListener("play", handlePlay);
+        audio.removeEventListener("pause", handlePause);
+        audio.removeEventListener("ended", handleEnded);
+      };
+    }
+  }, [audioBlob]);
+
   const handleDelete = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+    }
     setAudioBlob(null);
     setTranscript("");
     setIsPlaying(false);
+    audioChunksRef.current = [];
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("offeredPrice", offeredPrice);
+    formData.append("offeredEstimatedTime", estimatedTime);
+    formData.append("comment", transcript || comment);
+    formData.append("taskId", taskId);
+    // Optional: formData.append("status", "APPLY");
+
+    // Simulate file upload (audio or image)
+    if (audioBlob) formData.append("refWorkItems", audioBlob);
+
+    const res = await submitBid(formData);
+
+    if (res?.status === 201) {
+      toast.success("Bid created successfully!");
+      onClose();
+    }
   };
 
   return (
@@ -86,8 +253,8 @@ export default function JobApplicationOverlay({ onClose }) {
           <div className="text-xs text-gray-400 flex gap-6 mt-2">
             Posted 6 hours ago
             <Heart
-              size={20}
               className="text-white p-1 fill-white cursor-pointer bg-blue-500 rounded-full"
+              size={20}
             />
           </div>
         </div>
@@ -98,12 +265,14 @@ export default function JobApplicationOverlay({ onClose }) {
         <h2 className="text-2xl font-semibold text-black mt-6 mb-4">
           Apply for job
         </h2>
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Budget */}
           <div>
             <label className="text-sm font-bold text-gray-700">Budget</label>
             <input
-              type="text"
+              type="number"
+              value={offeredPrice}
+              onChange={(e) => setOfferedPrice(e.target.value)}
               placeholder="Budget"
               className="w-full text-sm mt-1 border border-blue-300 px-4 py-2 rounded-lg focus:ring-blue-400 focus:ring-2 outline-none"
             />
@@ -111,22 +280,15 @@ export default function JobApplicationOverlay({ onClose }) {
 
           {/* Cost Type */}
           <div>
-            <label className="text-sm font-bold text-gray-700">Cost Type</label>
-            <select className="w-full mt-1 border border-blue-300 px-4 py-2 rounded-lg focus:ring-blue-400 focus:ring-2 outline-none text-sm text-gray-500">
-              <option>Select Cost Type</option>
-              <option>Hourly</option>
-              <option>Fixed</option>
-            </select>
-          </div>
-
-          {/* Completion Date */}
-          <div>
             <label className="text-sm font-bold text-gray-700">
-              Expected completion date
+              Estimated Time (in hours)
             </label>
             <input
-              type="date"
-              className="w-full mt-1 border border-blue-300 px-4 py-2 rounded-lg focus:ring-blue-400 focus:ring-2 outline-none text-sm text-gray-500"
+              type="number"
+              value={estimatedTime}
+              onChange={(e) => setEstimatedTime(e.target.value)}
+              placeholder="e.g., 12"
+              className="w-full text-sm mt-1 border border-blue-300 px-4 py-2 rounded-lg focus:ring-blue-400 focus:ring-2 outline-none"
             />
           </div>
 
@@ -166,14 +328,11 @@ export default function JobApplicationOverlay({ onClose }) {
                 </>
               )}
             </div>
-            {/* Dummy audio player (you'll use actual blob in real app) */}
-            {audioBlob && (
-              <audio ref={audioRef} src="/dummy.mp3" className="hidden" />
-            )}
+            {audioBlob && <audio ref={audioRef} className="hidden" />}
           </div>
 
           {/* Transcript */}
-          {audioBlob && (
+          {(audioBlob || transcript) && (
             <div className="mt-4">
               <label className="text-sm font-bold text-gray-700">
                 Edit Transcript
@@ -183,20 +342,23 @@ export default function JobApplicationOverlay({ onClose }) {
                 value={transcript}
                 onChange={(e) => setTranscript(e.target.value)}
                 className="w-full mt-1 border border-blue-300 px-4 py-2 rounded-lg focus:ring-blue-400 focus:ring-2 outline-none resize-none text-sm text-gray-500"
+                placeholder="Your speech will appear here..."
               />
             </div>
           )}
 
-          {/* Comment */}
+          {/* Additional Comments */}
           <div>
             <label className="text-sm font-bold text-gray-700">
               Additional Comments
             </label>
             <textarea
               rows={4}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
               className="w-full mt-1 border border-blue-300 px-4 py-2 rounded-lg focus:ring-blue-400 focus:ring-2 outline-none resize-none text-sm text-gray-500"
               placeholder="Comment for budget and other specifications"
-            ></textarea>
+            />
           </div>
 
           <div className="pt-4">

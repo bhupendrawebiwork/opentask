@@ -93,7 +93,7 @@ export default function SignIn() {
               <input type="checkbox" id="terms" className="mr-2" />
               <label htmlFor="terms" className="text-black">
                 Not a Member?{" "}
-                <Link href="/signup" className="text-blue-400 font-bold">
+                <Link href="/auth/register" className="text-blue-400 font-bold">
                   Sign Up
                 </Link>
               </label>

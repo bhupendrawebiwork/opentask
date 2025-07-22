@@ -17,7 +17,7 @@ export default function Message() {
     getMessages,
     messages,
     sendMessage,
-    subscribeToMessages
+    subscribeToMessages,
   } = useChatStore();
 
   const { onlineUsers, checkAuth } = useAuthStore();
@@ -35,15 +35,16 @@ export default function Message() {
   const handleSend = () => {
     const input = document.getElementById("message-input") as HTMLInputElement;
     if (!input.value.trim()) return;
-    sendMessage({ text: input.value,  });
+    sendMessage({ text: input.value });
     input.value = "";
   };
 
   useEffect(() => {
-  if (selectedUser) {
-   subscribeToMessages();
-  }
-}, [selectedUser]);
+    if (selectedUser) {
+      subscribeToMessages();
+    }
+  }, [selectedUser]);
+
   return (
     <>
       {/* <Navbar/> */}
@@ -77,7 +78,6 @@ export default function Message() {
             {filteredUsers.map((user, index) => (
               <div
                 onClick={() => {
-                  
                   setSelectedUser(user);
                   getMessages(user._id);
                 }}
@@ -107,79 +107,91 @@ export default function Message() {
 
         {/* Chat Section */}
         <div className="w-3/4 flex flex-col justify-center items-center p-6 border-l">
-      {!selectedUser ? (
-        <div className="text-gray-500 text-lg font-semibold mt-10">
-          Please select a user to start chatting.
-        </div>
-      ) : (
-        <div className="w-full h-full flex flex-col justify-between">
-          {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto space-y-6">
-            {messages.map((msg, index) =>
-              msg.senderId === selectedUser._id ? (
-                // Incoming message
-                <div key={index} className="flex gap-3">
-                  <Image
-                    src="/assets/profile.png"
-                    alt="User"
-                    width={36}
-                    height={36}
-                    className="rounded-full"
-                  />
-                  <div className="bg-white px-4 py-2 rounded-2xl text-sm text-gray-800 shadow max-w-[60%]">
-                    {msg.text}
-                  </div>
-                </div>
-              ) : (
-                // Outgoing message
-                <div key={index} className="flex justify-end">
-                  <div className="bg-gray-300 px-4 py-2 rounded-2xl text-sm text-gray-700 max-w-[60%] shadow">
-                    {msg.text}
-                  </div>
-                </div>
-              )
-            )}
-          </div>
-
-          {/* Message Input Box */}
-          <div className="bg-white mt-6 rounded-xl shadow-lg p-4 flex items-center gap-4">
-            <div className="flex gap-3 text-gray-500">
-              <b>B</b>
-              <i>I</i>
-              <u>U</u>
-              <s>S</s>
-              <span>🎨</span>
+          {!selectedUser ? (
+            <div className="text-gray-500 text-lg font-semibold mt-10">
+              Please select a user to start chatting.
             </div>
+          ) : (
+            <div className="w-full h-full flex flex-col justify-between">
+              <div className="flex items-start gap-3 cursor-pointer hover:bg-gray-100 rounded-xl p-2">
+                <Image
+                  src={
+                    selectedUser?.avatar ? imgUrl + selectedUser?.avatar : "/assets/profile.png"
+                  }
+                  alt="User"
+                  width={40}
+                  height={40}
+                  className="rounded-full object-cover"
+                />
+                <h2 className="p-1">{selectedUser?.fullName}</h2>
+              </div>
+              {/* Chat Messages */}
+              <div className="flex-1 overflow-y-auto space-y-6">
+                {messages.map((msg, index) =>
+                  msg.senderId === selectedUser._id ? (
+                    // Incoming message
+                    <div key={index} className="flex gap-3">
+                      <Image
+                        src="/assets/profile.png"
+                        alt="User"
+                        width={36}
+                        height={36}
+                        className="rounded-full"
+                      />
+                      <div className="bg-white px-4 py-2 rounded-2xl text-sm text-gray-800 shadow max-w-[60%]">
+                        {msg.text}
+                      </div>
+                    </div>
+                  ) : (
+                    // Outgoing message
+                    <div key={index} className="flex justify-end">
+                      <div className="bg-gray-300 px-4 py-2 rounded-2xl text-sm text-gray-700 max-w-[60%] shadow">
+                        {msg.text}
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
 
-            <input
-              id="message-input"
-              type="text"
-              placeholder="Write Your Message..."
-              className="flex-1 text-sm px-4 py-2 outline-none"
-            />
+              {/* Message Input Box */}
+              <div className="bg-white mt-6 rounded-xl shadow-lg p-4 flex items-center gap-4">
+                <div className="flex gap-3 text-gray-500">
+                  <b>B</b>
+                  <i>I</i>
+                  <u>U</u>
+                  <s>S</s>
+                  <span>🎨</span>
+                </div>
 
-            <div className="flex items-center gap-2 text-sm">
-              <select className="border rounded px-2 py-1 text-sm">
-                <option>12pt</option>
-                <option>14pt</option>
-              </select>
-              <select className="border rounded px-2 py-1 text-sm">
-                <option>Helvetica</option>
-                <option>Arial</option>
-                <option>Sans</option>
-              </select>
+                <input
+                  id="message-input"
+                  type="text"
+                  placeholder="Write Your Message..."
+                  className="flex-1 text-sm px-4 py-2 outline-none"
+                />
+
+                <div className="flex items-center gap-2 text-sm">
+                  <select className="border rounded px-2 py-1 text-sm">
+                    <option>12pt</option>
+                    <option>14pt</option>
+                  </select>
+                  <select className="border rounded px-2 py-1 text-sm">
+                    <option>Helvetica</option>
+                    <option>Arial</option>
+                    <option>Sans</option>
+                  </select>
+                </div>
+
+                <button
+                  onClick={handleSend}
+                  className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full"
+                >
+                  <Send size={16} />
+                </button>
+              </div>
             </div>
-
-            <button
-              onClick={handleSend}
-              className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full"
-            >
-              <Send size={16} />
-            </button>
-          </div>
+          )}
         </div>
-      )}
-    </div>
       </div>
     </>
   );

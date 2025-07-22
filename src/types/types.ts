@@ -59,3 +59,21 @@ export type Task = {
   updatedAt: string; // or Date
 };
 
+
+
+export interface Bid {
+  id: string;
+  offeredPrice: number;
+  offeredEstimatedTime: number;
+  comment?: string;
+  refWorkItems: string[];
+  status: "APPLY" | "ACCEPTED" | "REJECTED" | "WITHDRAWN";
+  taskId: string;
+  userId: string;
+  createdAt: string;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
