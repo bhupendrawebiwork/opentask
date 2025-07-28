@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import MyBidCard from "@/components/common/MyBidCard";
+import BidStatusCard from "@/components/common/BidStatusCard";
 
 const dummyBids = [
   {
@@ -129,7 +129,7 @@ export default function BidStatusPage() {
       <main className="flex-1 p-6">
         <h1 className="text-xl font-semibold mb-6">Bids Status</h1>
         {filteredBids.map((bid) => (
-          <MyBidCard key={bid.id} bid={bid} />
+          <BidStatusCard key={bid.id} bid={bid} />
         ))}
       </main>
     </div>

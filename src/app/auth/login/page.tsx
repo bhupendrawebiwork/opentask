@@ -54,7 +54,7 @@ export default function SignIn() {
         </div>
 
         <div className="flex-1/9 p-8 sm:py-20 rounded-4xl bg-white">
-          <h3 className="text-2xl font-bold mb-6 text-black">Login</h3>
+          {/* <h3 className="text-2xl font-bold mb-6 text-black">Login</h3> */}
 
           <form className="space-y-8" onSubmit={handleLogin}>
             <div>

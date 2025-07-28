@@ -123,7 +123,7 @@
             className="inline-flex items-center gap-2 text-sm bg-blue-500 text-white py-2 px-4 rounded-lg transition hover:bg-gray-900"
           >
             
-            Approve
+            Hire Now
           </button>
           </div>
         <div>

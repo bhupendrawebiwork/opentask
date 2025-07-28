@@ -4,12 +4,10 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import EditProfileForm from "@/components/EditProfile";
 import ChangePasswordForm from "@/components/common/ChangePassword";
+import Location from "@/components/common/Location";
 import {
   User,
-  Wallet,
-  Bookmark,
   Lock,
-  Settings,
   LogOut,
   Mail,
   Phone,
@@ -17,10 +15,13 @@ import {
   CheckCircle,
   Star,
   Globe,
+  MapPin,
+  Wrench,
 } from "lucide-react";
 import { imgUrl } from "@/config/constent";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/userStore";
+import ServicesForm from "@/components/common/ServicesForm";
 
 export default function ProfilePage() {
   const { user, loading, fetchUser, updateUser, uploadAvatar } = useUserStore();
@@ -30,10 +31,10 @@ export default function ProfilePage() {
 
   const menuItems = [
     { key: "edit", label: "Edit Profile", icon: <User size={18} /> },
-    { key: "wallet", label: "Wallet", icon: <Wallet size={18} /> },
-    { key: "saved", label: "Save Project", icon: <Bookmark size={18} /> },
+    // { key: "saved", label: "Save Project", icon: <Bookmark size={18} /> },
     { key: "password", label: "Change Password", icon: <Lock size={18} /> },
-    { key: "settings", label: "Setting", icon: <Settings size={18} /> },
+    { key: "location", label: "Location", icon: <MapPin size={18} /> },
+    { key: "services", label: "Services", icon: <Wrench size={18} /> },
   ];
 
   useEffect(() => {
@@ -157,6 +158,8 @@ console.log("`${imgUrl}${user.avatar}`   " , `${imgUrl}${user?.avatar}`);
             <EditProfileForm user={user} handleUpdate={updateUser} />
           )}
           {activeTab === "password" && <ChangePasswordForm />}
+           {activeTab === "location" && <Location />}
+           {activeTab === "services" && <ServicesForm />}
         </div>
       </div>
     </div>
