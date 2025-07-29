@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { CheckCircle, MapPin, Heart } from "lucide-react";
+import {  MapPin, Heart } from "lucide-react";
 
 export default function BidStatusCard({ task, onClick }: any) {
   return (
@@ -22,7 +22,13 @@ export default function BidStatusCard({ task, onClick }: any) {
           <div className="flex flex-col">
             <div className="flex items-center gap-1 font-semibold text-gray-800 text-sm sm:text-base">
               {task?.user?.name || "John Deo"}
-              <CheckCircle size={16} className="text-blue-400" />
+             <Image
+                             src="/assets/verified.png"
+                             alt="verified"
+                             width={20}
+                             height={20}
+                           />
+                         
             </div>
             <div className="text-xs text-blue-400 flex items-center gap-1 mt-0.5">
               <MapPin size={13} />
