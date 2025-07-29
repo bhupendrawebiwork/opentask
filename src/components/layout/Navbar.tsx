@@ -4,111 +4,53 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { baseUrl } from "@/config/constent";
 import { useAuthStore } from "@/store/useAuthStore";
+import { Bell } from "lucide-react";
 
 const Navbar = () => {
+  const pathname = usePathname();
   const { authUser } = useAuthStore();
-  const pathname = usePathname().toString();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-    if (!token || !user) return;
-    setIsLoggedIn(true);
-    setUserName(authUser?.name||"");
+    if (authUser?.name) {
+      setUserName(authUser.name);
+    }
   }, [authUser]);
 
-  return (
-    <nav className="flex justify-between items-center px-16 py-4 bg-white shadow-sm border-b border-gray-200 pb-2">
-      <div className="text-2xl font-bold text-green-600">
-        <Link href="/">
-          <Image src="/assets/main logo.png" alt="Logo" width={80} height={0} />
-        </Link>
-      </div>
+  const isLoggedIn = !!authUser;
 
-      <ul className="flex gap-6 items-center text-gray-700 font-semibold">
+  const navLinks = [
+    { href: "/", label: "Browse Tasks" },
+    { href: "/my-tasks", label: "My Tasks" },
+    { href: "/my-bids", label: "My Bids" },
+    { href: "/message", label: "Message" },
+    { href: "/bid-status", label: "Bids Status" },
+  ];
+
+  return (
+    <nav className="flex justify-between items-center px-6 md:px-16 py-4 bg-white shadow-sm border-b border-gray-200">
+      <Link href="/">
+        <Image src="/assets/main logo.png" alt="Logo" width={80} height={40} />
+      </Link>
+
+      <ul className="flex flex-wrap gap-4 md:gap-6 items-center text-sm md:text-base font-semibold text-gray-700">
         {isLoggedIn ? (
           <>
-            <li>
-              <Link
-                href="/"
-                className={`pb-2 ${
-                  pathname === "/"
-                    ? "border-b-2 border-blue-500 "
-                    : "hover:text-blue-500"
-                }`}
-              >
-                Browse Tasks
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                href="/my-tasks"
-                className={`pb-2 ${
-                  pathname === "/my-tasks"
-                    ? "border-b-2 border-blue-500 "
-                    : "hover:text-blue-500"
-                }`}
-              >
-                My Tasks
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                href="/my-bids"
-                className={`pb-2 ${
-                  pathname === "/my-bids"
-                    ? "border-b-2 border-blue-500 "
-                    : "hover:text-blue-500"
-                }`}
-              >
-                My Bids
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                href="/message"
-                className={`pb-2 ${
-                  pathname === "/message"
-                    ? "border-b-2 border-blue-500 "
-                    : "hover:text-blue-500"
-                }`}
-              >
-                Message
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                href="/saved-jobs"
-                className={`pb-2 ${
-                  pathname === "/saved-jobs"
-                    ? "border-b-2 border-blue-500 "
-                    : "hover:text-blue-500"
-                }`}
-              >
-                Save Jobs
-              </Link>
-            </li>
-
-<li>
-              <Link
-                href="/bid-status"
-                className={`pb-2 ${
-                  pathname === "/bid-status"
-                    ? "border-b-2 border-blue-500 "
-                    : "hover:text-blue-500"
-                }`}
-              >
-                Bids Status
-              </Link>
-            </li>
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={`pb-2 transition ${
+                    pathname === link.href
+                      ? "border-b-2 border-blue-500"
+                      : "hover:text-blue-500"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
 
             <li>
               <Link
@@ -124,11 +66,21 @@ const Navbar = () => {
                 <Image
                   src="/assets/social-icons/profile.png"
                   alt="Profile"
-                  width={40}
-                  height={40}
+                  width={36}
+                  height={36}
+                  className="rounded-full"
                 />
-                {userName || "User"}
+                <span className="hidden md:inline">{userName || "User"}</span>
               </Link>
+            </li>
+
+            {/* 🔔 Notification Bell Icon */}
+            <li>
+              <button className="relative p-2 rounded-full hover:bg-gray-100 transition">
+                <Bell className="w-5 h-5 text-gray-600" />
+                {/* Optional notification dot */}
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+              </button>
             </li>
           </>
         ) : (
@@ -137,21 +89,20 @@ const Navbar = () => {
               <Link
                 href="/auth/login"
                 className={`pb-2 ${
-                  pathname === "/signin"
-                    ? "border-b-2 border-blue-500 "
+                  pathname === "/auth/login"
+                    ? "border-b-2 border-blue-500"
                     : "hover:text-blue-500"
                 }`}
               >
                 Sign In
               </Link>
             </li>
-
             <li>
               <Link
                 href="/auth/register"
                 className={`pb-2 ${
-                  pathname === "/register"
-                    ? "border-b-2 border-blue-500 "
+                  pathname === "/auth/register"
+                    ? "border-b-2 border-blue-500"
                     : "hover:text-blue-500"
                 }`}
               >

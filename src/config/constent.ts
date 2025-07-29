@@ -1,4 +1,4 @@
-export const base = "07a74360e57c.ngrok-free.app";
+export const base = "01541aa74e72.ngrok-free.app";
 export let baseUrl = `https://${base}/api`;
 export let imgUrl = `https://${base}`;
 

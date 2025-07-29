@@ -27,100 +27,79 @@ export default function MyTasksPage() {
     <div className="min-h-screen bg-white">
       {/* {/* <Navbar /> */}
 
-      <div className="bg-[#F7F5F8] min-h-screen flex">
-        {/* Sidebar Filters */}
-        <aside className="w-[300px] p-6">
-          <h3 className="text-lg font-semibold mb-4">Filter</h3>
+     <div className="bg-[#F7F5F8] h-[calc(100vh-64px)] flex overflow-hidden">
+  {/* Sidebar Filters */}
+  <aside className="w-[300px] p-6 bg-white border-r border-gray-200 h-full overflow-y-auto">
+    <h3 className="text-lg font-semibold mb-4">Filter</h3>
+    <input
+      type="text"
+      placeholder="Search Task..."
+      className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-4"
+    />
+    <select className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-6">
+      <option>Select Category</option>
+    </select>
 
-          <input
-            type="text"
-            placeholder="Search Task..."
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-4"
-          />
+    {/* Levels */}
+    <div className="mb-4">
+      <h4 className="font-semibold mb-2">Levels</h4>
+      {["Entry Level", "Intermediate & Professionals", "Expert & High Level Exp."].map(label => (
+        <label key={label} className="flex items-center space-x-2 text-sm mb-2">
+          <input type="checkbox" />
+          <span>{label}</span>
+        </label>
+      ))}
+    </div>
 
-          <select className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-6">
-            <option>Select Category</option>
-          </select>
-
-          <div className="mb-4">
-            <h4 className="font-semibold mb-2">Levels</h4>
-            {[
-              "Entry Level",
-              "Intermediate & Professionals",
-              "Expert & High Level Exp.",
-            ].map((label) => (
-              <label
-                key={label}
-                className="flex items-center space-x-2 text-sm mb-2"
-              >
-                <input type="checkbox" />
-                <span>{label}</span>
-              </label>
-            ))}
-          </div>
-
-          <div className="mb-4">
-            <h4 className="font-semibold mb-2">Job Type</h4>
-            {["Hourly base", "Monthly base", "Contract base"].map(
-              (label, i) => (
-                <label
-                  key={label}
-                  className="flex items-center space-x-2 text-sm mb-2"
-                >
-                  <input type="checkbox" defaultChecked={i === 0} />
-                  <span>{label}</span>
-                </label>
-              )
-            )}
-
-            <div className="flex gap-2 mt-2">
-              <input
-                type="number"
-                placeholder="$ min"
-                className="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm"
-              />
-              <input
-                type="number"
-                placeholder="$ max"
-                className="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm"
-              />
-            </div>
-          </div>
-
-          <div>
-            <h4 className="font-semibold mb-2">Fixed Price</h4>
-            {[
-              "Less Than $100",
-              "$100 To $500",
-              "$500 To $1k",
-              "$1k To $5k",
-            ].map((range) => (
-              <label
-                key={range}
-                className="flex items-center space-x-2 text-sm mb-2"
-              >
-                <input type="checkbox" />
-                <span>{range}</span>
-              </label>
-            ))}
-          </div>
-        </aside>
-
-        {/* Task List */}
-        <main className="flex-1 p-10">
-          <h1 className="text-2xl font-bold mb-6 text-black">
-            My Posted Tasks
-          </h1>
-
-          {tasks.map((task: Task, i) => (
-            <TaskCard
-              task={task}
-              key={i}
-              onClick={(task: Task) => handleClickOnTask(task)}
-            />
-          ))}
-        </main>
+    {/* Job Type */}
+    <div className="mb-4">
+      <h4 className="font-semibold mb-2">Job Type</h4>
+      {["Hourly base", "Monthly base", "Contract base"].map((label, i) => (
+        <label key={label} className="flex items-center space-x-2 text-sm mb-2">
+          <input type="checkbox" defaultChecked={i === 0} />
+          <span>{label}</span>
+        </label>
+      ))}
+      <div className="flex gap-2 mt-2">
+        <input
+          type="number"
+          placeholder="$ min"
+          className="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm"
+        />
+        <input
+          type="number"
+          placeholder="$ max"
+          className="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm"
+        />
       </div>
+    </div>
+
+    {/* Fixed Price */}
+    <div>
+      <h4 className="font-semibold mb-2">Fixed Price</h4>
+      {["Less Than $100", "$100 To $500", "$500 To $1k", "$1k To $5k"].map(range => (
+        <label key={range} className="flex items-center space-x-2 text-sm mb-2">
+          <input type="checkbox" />
+          <span>{range}</span>
+        </label>
+      ))}
+    </div>
+  </aside>
+
+  {/* Scrollable Task List */}
+  <main className="flex-1 p-10 overflow-y-auto h-full">
+    <h1 className="text-2xl font-bold mb-6 text-black">My Posted Tasks</h1>
+
+    {tasks.map((task: Task, i) => (
+      <TaskCard
+        task={task}
+        key={i}
+        onClick={(task: Task) => handleClickOnTask(task)}
+      />
+    ))}
+  </main>
+</div>
+
 
       {/* Overlay */}
       {showOverlay && (

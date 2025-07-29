@@ -48,7 +48,7 @@ export default function ProfilePage() {
 console.log("`${imgUrl}${user.avatar}`   " , `${imgUrl}${user?.avatar}`);
 
   return (
-    <div className="min-h-screen bg-[#EEF2F8]">
+    <div className="min-h-screen bg-[#EEF2F8] py-4">
       <div className="bg-white rounded-3xl shadow p-8 flex justify-between items-center mx-12 mt-4">
         <div className="flex items-center gap-6">
           <div className="relative w-35 h-35 rounded-3xl overflow-hidden">

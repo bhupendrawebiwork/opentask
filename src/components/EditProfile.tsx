@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { User, Mail, Phone, Briefcase, Building2 } from "lucide-react";
+import { User, Mail, Phone,} from "lucide-react";
 
 export default function EditProfileForm({ user, handleUpdate }: any) {
   const [formData, setFormData] = useState({
@@ -133,7 +133,9 @@ export default function EditProfileForm({ user, handleUpdate }: any) {
             />
           </div>
         </div> */}
-        <div className="text-left mt-14">
+        
+      </form>
+      <div className="text-left mt-8">
           <button
             type="submit"
             className="bg-blue-400 text-white px-8 py-3 rounded-xl hover:bg-blue-500 transition"
@@ -141,7 +143,6 @@ export default function EditProfileForm({ user, handleUpdate }: any) {
             Update Details
           </button>
         </div>
-      </form>
     </>
   );
 }
