@@ -22,6 +22,7 @@ const navItems = [
   { label: "Moderation", href: "/admin/moderation", icon: Users },
   { label: "Live Chat", href: "/admin/live-chat", icon: MessageCircle },
   { label: "Review Appeals", href: "/admin/reviews", icon: Gavel },
+  { label: "User List", href: "/admin/user-list", icon: Gavel },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

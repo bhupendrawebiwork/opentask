@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Heart } from "lucide-react";
+import { X } from "lucide-react";
 
 export default function BidEditOverlay({ task, onClose, onSave }: any) {
   const [quotedPrice, setQuotedPrice] = useState(task?.quotedPrice || "");
