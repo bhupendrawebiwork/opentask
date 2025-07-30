@@ -28,7 +28,6 @@ export default function EditProfileForm({ user, handleUpdate }: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ formData });
 
     handleUpdate(formData); // this should POST to /user
   };

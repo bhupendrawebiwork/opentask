@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import NotificationDropdown from "../common/NotificationDropdown";
+import { POSTER, TASKER } from "@/config/constent";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -20,12 +21,19 @@ const Navbar = () => {
 
   const isLoggedIn = !!authUser;
 
-  const navLinks = [
-    { href: "/", label: "Browse Tasks" },
+  const navLinksPoster = [
+    // { href: "/", label: "Browse Tasks" },
     { href: "/my-tasks", label: "My Tasks" },
-    { href: "/my-bids", label: "My Bids" },
+    // { href: "/my-bids", label: "My Bids" },
     { href: "/message", label: "Message" },
     { href: "/bid-status", label: "Bids Status" },
+  ];
+  const navLinksTasker = [
+    { href: "/", label: "Browse Tasks" },
+    // { href: "/my-tasks", label: "My Tasks" },
+    { href: "/my-bids", label: "My Bids" },
+    { href: "/message", label: "Message" },
+    // { href: "/bid-status", label: "Bids Status" },
   ];
 
   return (
@@ -37,29 +45,33 @@ const Navbar = () => {
       <ul className="flex flex-wrap gap-4 md:gap-6 items-center text-sm md:text-base font-semibold text-gray-700">
         {isLoggedIn ? (
           <>
-            {navLinks.map((link) => (
-              <li key={link.href}>
+            {(authUser.role === TASKER ? navLinksTasker : navLinksPoster).map(
+              (link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className={`pb-2 transition ${
+                      pathname === link.href
+                        ? "border-b-2 border-blue-500"
+                        : "hover:text-blue-500"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              )
+            )}
+
+            {authUser.role === POSTER ? (
+              <li>
                 <Link
-                  href={link.href}
-                  className={`pb-2 transition ${
-                    pathname === link.href
-                      ? "border-b-2 border-blue-500"
-                      : "hover:text-blue-500"
-                  }`}
+                  href="/post-task"
+                  className="bg-black text-white px-4 py-2 rounded-xl hover:bg-gray-800"
                 >
-                  {link.label}
+                  Post Task
                 </Link>
               </li>
-            ))}
-
-            <li>
-              <Link
-                href="/post-task"
-                className="bg-black text-white px-4 py-2 rounded-xl hover:bg-gray-800"
-              >
-                Post Task
-              </Link>
-            </li>
+            ) : null}
 
             <li>
               <Link href="/auth/profile" className="flex items-center gap-2">
@@ -76,7 +88,7 @@ const Navbar = () => {
 
             {/* 🔔 Notification Bell Icon */}
             <li>
-              <NotificationDropdown/>
+              <NotificationDropdown />
             </li>
           </>
         ) : (

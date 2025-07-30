@@ -6,7 +6,7 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { baseUrl } from "@/config/constent";
+import { baseUrl, POSTER, TASKER } from "@/config/constent";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function SignUp() {
@@ -77,8 +77,8 @@ export default function SignUp() {
                   <input
                     type="radio"
                     name="role"
-                    value="poster"
-                    checked={role === "poster"}
+                    value={POSTER}
+                    checked={role === POSTER}
                     onChange={(e) => setRole(e.target.value)}
                     className="w-4 h-4 text-blue-500 border-blue-300"
                   />
@@ -88,8 +88,8 @@ export default function SignUp() {
                   <input
                     type="radio"
                     name="role"
-                    value="tasker"
-                    checked={role === "tasker"}
+                    value={TASKER}
+                    checked={role === TASKER}
                     onChange={(e) => setRole(e.target.value)}
                     className="w-4 h-4  text-blue-500 border-blue-300"
                   />

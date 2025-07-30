@@ -1,5 +1,4 @@
 // src/hooks/useVoiceRecorder.ts
-"use client"
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 

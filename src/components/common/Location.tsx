@@ -1,16 +1,62 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MapPin, LocateFixed } from "lucide-react";
 import { toast } from "react-toastify";
 
-export default function Location() {
+export default function Location({ user, handleUpdate }: any) {
   const [addressLine, setAddressLine] = useState("");
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [loading, setLoading] = useState(false);
   const [geoLoading, setGeoLoading] = useState(false);
+
+  // Initialize form with user location data
+  useEffect(() => {
+    if (user?.location) {
+      const location = JSON.parse(user.location);
+      // user.location = JSON.parse(user.location);
+      setAddressLine(location.addressLine || "");
+      setStreet(location.street || "");
+      setCity(location.city || "");
+      setState(location.state || "");
+    }
+  }, [user]);
+
+  // Reverse geocoding function
+  const reverseGeocode = async (latitude: number, longitude: number) => {
+    try {
+      const response = await fetch(
+        `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=5ca9686cf0b7446395c8084f36bdd53b`
+      );
+      const data = await response.json();
+
+      if (data.results && data.results.length > 0) {
+        const result = data.results[0];
+        const components = result.components;
+
+        setAddressLine(
+          components.house_number
+            ? `${components.house_number} ${components.road || ""}`.trim()
+            : components.road || ""
+        );
+        setStreet(components.road || "");
+        setCity(components.city || components.town || components.village || "");
+        setState(components.state || components.state_district || "");
+
+        toast.success("Location updated from current position!");
+      } else {
+        // Fallback: just show coordinates if geocoding fails
+        setAddressLine(`${latitude}, ${longitude}`);
+        toast.success(`Location set to coordinates: ${latitude}, ${longitude}`);
+      }
+    } catch (error) {
+      // Fallback: use coordinates if reverse geocoding fails
+      setAddressLine(`${latitude}, ${longitude}`);
+      toast.success(`Location set to coordinates: ${latitude}, ${longitude}`);
+    }
+  };
 
   const handleUseCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -21,15 +67,22 @@ export default function Location() {
     setGeoLoading(true);
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const { latitude, longitude } = position.coords;
-        toast.success(`Lat: ${latitude}, Long: ${longitude}`);
-        // TODO: Replace this with reverse geocoding
+
+        // Perform reverse geocoding to get address
+        await reverseGeocode(latitude, longitude);
+
         setGeoLoading(false);
       },
       () => {
         toast.error("Unable to retrieve your location.");
         setGeoLoading(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
       }
     );
   };
@@ -45,12 +98,22 @@ export default function Location() {
     }
 
     try {
-      // Replace this with your update/store logic
+      // Create location object to pass to handleUpdate
+      const locationData = {
+        location: {
+          addressLine,
+          street,
+          city,
+          state,
+        },
+      };
+
+      // Call the handleUpdate function passed from parent
+      await handleUpdate(locationData);
+
       toast.success("Location updated successfully!");
-      setAddressLine("");
-      setStreet("");
-      setCity("");
-      setState("");
+    } catch (error) {
+      toast.error("Failed to update location. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -61,12 +124,14 @@ export default function Location() {
 
   return (
     <>
-      <h3 className="text-xl font-semibold text-gray-800 mb-6">Update Location</h3>
+      <h3 className="text-xl font-semibold text-gray-800 mb-6">
+        Update Location
+      </h3>
       <form className="grid grid-cols-2 gap-6" onSubmit={handleUpdateLocation}>
         {/* Address Line */}
         <div>
           <label className="text-sm font-semibold text-gray-700 mb-1 block">
-            Address Line  
+            Address Line
           </label>
           <div className="relative">
             <MapPin className="absolute top-3 left-3 text-gray-400" size={16} />
@@ -84,7 +149,7 @@ export default function Location() {
         {/* Street */}
         <div>
           <label className="text-sm font-semibold text-gray-700 mb-1 block">
-            Street  
+            Street
           </label>
           <div className="relative">
             <MapPin className="absolute top-3 left-3 text-gray-400" size={16} />
@@ -102,7 +167,7 @@ export default function Location() {
         {/* City */}
         <div>
           <label className="text-sm font-semibold text-gray-700 mb-1 block">
-            City  
+            City
           </label>
           <div className="relative">
             <MapPin className="absolute top-3 left-3 text-gray-400" size={16} />
@@ -120,7 +185,7 @@ export default function Location() {
         {/* State */}
         <div>
           <label className="text-sm font-semibold text-gray-700 mb-1 block">
-            State  
+            State
           </label>
           <div className="relative">
             <MapPin className="absolute top-3 left-3 text-gray-400" size={16} />

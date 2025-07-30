@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   FormControl,
   InputLabel,
@@ -32,7 +32,7 @@ const skillsList = [
   "Other",
 ];
 
-export default function ServicesForm() {
+export default function ServicesForm({ user, handleUpdate }: any) {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [otherSkill, setOtherSkill] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -64,7 +64,14 @@ export default function ServicesForm() {
       other: selectedSkills.includes("Other") ? otherSkill : "",
     };
     console.log("Submitted Data:", data);
+    handleUpdate({ services: selectedSkills });
   };
+
+  useEffect(() => {
+    if (user) {
+      setSelectedSkills(user.services || []);
+    }
+  }, [user.services]);
 
   return (
     <Box
@@ -78,51 +85,52 @@ export default function ServicesForm() {
         alignItems: "flex-start", // aligns left
       }}
     >
-        <h4 className="text-xl font-semibold text-gray-800 mb-6">Select Your Skills</h4>
-     <FormControl fullWidth sx={{ mb: 3 }}>
-  <InputLabel id="skills-label">Select Your Skills</InputLabel>
-  <Select
-    labelId="skills-label"
-    id="skills-select"
-    multiple
-    open={dropdownOpen}
-    onOpen={() => setDropdownOpen(true)}
-    onClose={() => setDropdownOpen(false)}
-    value={selectedSkills}
-    onChange={handleChange}
-    input={<OutlinedInput label="Select Your Skills" />}
-    renderValue={(selected) => selected.join(", ")}
-    MenuProps={{
-      PaperProps: {
-        style: {
-          maxHeight: 300,
-          width: 250,
-        },
-      },
-      anchorOrigin: {
-        vertical: "bottom",
-        horizontal: "left",
-      },
-      transformOrigin: {
-        vertical: "top",
-        horizontal: "left",
-      },
-    }}
-  >
-    <MenuItem value="Select All">
-      <Checkbox checked={isAllSelected} />
-      <ListItemText primary="Select All" />
-    </MenuItem>
+      <h4 className="text-xl font-semibold text-gray-800 mb-6">
+        Select Your Skills
+      </h4>
+      <FormControl fullWidth sx={{ mb: 3 }}>
+        <InputLabel id="skills-label">Select Your Skills</InputLabel>
+        <Select
+          labelId="skills-label"
+          id="skills-select"
+          multiple
+          open={dropdownOpen}
+          onOpen={() => setDropdownOpen(true)}
+          onClose={() => setDropdownOpen(false)}
+          value={selectedSkills}
+          onChange={handleChange}
+          input={<OutlinedInput label="Select Your Skills" />}
+          renderValue={(selected) => selected.join(", ")}
+          MenuProps={{
+            PaperProps: {
+              style: {
+                maxHeight: 300,
+                width: 250,
+              },
+            },
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "left",
+            },
+            transformOrigin: {
+              vertical: "top",
+              horizontal: "left",
+            },
+          }}
+        >
+          <MenuItem value="Select All">
+            <Checkbox checked={isAllSelected} />
+            <ListItemText primary="Select All" />
+          </MenuItem>
 
-    {skillsList.map((skill) => (
-      <MenuItem key={skill} value={skill}>
-        <Checkbox checked={selectedSkills.includes(skill)} />
-        <ListItemText primary={skill} />
-      </MenuItem>
-    ))}
-  </Select>
-</FormControl>
-
+          {skillsList.map((skill) => (
+            <MenuItem key={skill} value={skill}>
+              <Checkbox checked={selectedSkills.includes(skill)} />
+              <ListItemText primary={skill} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
       {selectedSkills.includes("Other") && (
         <TextField
@@ -137,7 +145,12 @@ export default function ServicesForm() {
         />
       )}
 
-      <Button variant="contained" color="primary" onClick={handleSave} className="mt-6">
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleSave}
+        className="mt-6"
+      >
         Save Services
       </Button>
     </Box>

@@ -78,7 +78,7 @@ console.log("`${imgUrl}${user.avatar}`   " , `${imgUrl}${user?.avatar}`);
             <h2 className="text-3xl font-semibold text-black">
               {loading ? "Loading..." : user?.name || "N/A"}
             </h2>
-            <p className="text-gray-500 text-lg">{user?.position || ""}</p>
+            {/* <p className="text-gray-500 text-lg">{user?.position || ""}</p> */}
             <div className="text-gray-500 text-sm mt-1">
               <Mail className="inline mr-2" size={14} />
               {user?.email || ""}
@@ -98,10 +98,10 @@ console.log("`${imgUrl}${user.avatar}`   " , `${imgUrl}${user?.avatar}`);
             </p>
           </div>
           <div className="flex text-yellow-400">
-            {[...Array(user?.rating || 0)].map((_, i) => (
+            {[...Array(user?.aggrRating || 0)].map((_, i) => (
               <Star key={i} size={18} fill="currentColor" strokeWidth={0} />
             ))}
-            {[...Array(5 - (user?.rating || 0))].map((_, i) => (
+            {[...Array(5 - (user?.aggrRating || 0))].map((_, i) => (
               <Star
                 key={i}
                 size={18}
@@ -116,7 +116,7 @@ console.log("`${imgUrl}${user.avatar}`   " , `${imgUrl}${user?.avatar}`);
             <Globe className="absolute text-white mt-2 ml-1" size={16} />
             <select
               className="rounded px-5 py-2 text-sm bg-gray-600 text-white text-center"
-              value={user?.lang || "english"}
+              value={user?.preferredLanguage[0] || "english"}
               onChange={(e) => updateUser({ lang: e.target.value })}
             >
               <option value="english">English</option>
@@ -158,8 +158,8 @@ console.log("`${imgUrl}${user.avatar}`   " , `${imgUrl}${user?.avatar}`);
             <EditProfileForm user={user} handleUpdate={updateUser} />
           )}
           {activeTab === "password" && <ChangePasswordForm />}
-           {activeTab === "location" && <Location />}
-           {activeTab === "services" && <ServicesForm />}
+           {activeTab === "location" && <Location user={user} handleUpdate={updateUser} />}
+           {activeTab === "services" && <ServicesForm user={user} handleUpdate={updateUser} />}
         </div>
       </div>
     </div>

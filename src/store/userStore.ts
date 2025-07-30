@@ -3,17 +3,30 @@ import { create } from "zustand";
 import { toast } from "react-toastify";
 import { axiosInstance } from "@/lib/axios";
 
-interface User {
+export type User = {
   id: string;
-  name: string;
   email: string;
-  phone?: string;
-  avatar?: string;
-  isVerified?: boolean;
-  rating?: number;
-  position?: string;
-  lang?: string;
-}
+  password: string;
+  name: string;
+  phone: string;
+  isActive: boolean;
+  isVerified: boolean;
+  isOnline: boolean;
+  lastSeen: string | null;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  role: "TASKER" | "POSTER" | string; // add other possible roles if known
+  userId: string;
+  avatar: string;
+  aggrRating: number;
+  preferredLanguage: string[];
+  services: any[]; // update if you know the service object structure
+  bankAccountInfo: any | null; // replace `any` with actual type if known
+  taskRating: number;
+  posterRating: number;
+  location: any | null;
+  lang: string; // replace `any` with actual type if known
+};
 
 interface UserStore {
   user: User | null;
@@ -48,7 +61,7 @@ export const useUserStore = create<UserStore>((set) => ({
   updateUser: async (data) => {
     try {
       const res = await axiosInstance.patch("/user", data);
-      toast.success("Profile updated successfully");
+      // toast.success("Profile updated successfully");
       set({ user: res.data });
     } catch (err: any) {
       console.error("Update error:", err);
