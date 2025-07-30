@@ -62,7 +62,7 @@ export default function PostTaskPage() {
       <div className="flex">
         <Sidebar />
 
-        <main className="flex-1 p-10 bg-[#F7F5F8]">
+           <main className="flex-1 p-10 bg-[#F7F5F8] overflow-y-auto max-h-[85vh]">
           <h1 className="text-xl font-bold mb-4 text-black ml-10">Post Task</h1>
 
           <div className="bg-white rounded-xl px-10 py-8 mx-10 space-y-10">

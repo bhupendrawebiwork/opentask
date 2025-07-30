@@ -9,7 +9,7 @@ export default function PostTaskPage() {
   return (
     <div className="min-h-screen bg-[#F4F8FF] flex items-center justify-center relative ">
       {/* Modal */}
-      <div className="bg-white rounded-2xl shadow-xl py-20 px-10 w-full max-w-xl relative z-10 text-center bottom-38">
+      <div className="bg-white rounded-2xl shadow-xl py-20 px-10 w-full max-w-xl relative z-10 text-center bottom-38 ">
         <button
           onClick={() => router.back()}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
@@ -22,7 +22,7 @@ export default function PostTaskPage() {
         </h2>
         <p className="text-gray-600 mb-8">Choose your preferred input method</p>
 
-        <div className="flex justify-center gap-6">
+        <div className="flex justify-center gap-6 ">
           <div
             onClick={() => router.push("/voice-task")}
             className="cursor-pointer border border-gray-200 hover:border-blue-400 rounded-xl px-6 py-6 w-1/2 transition group"

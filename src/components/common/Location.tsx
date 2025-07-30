@@ -127,7 +127,8 @@ export default function Location({ user, handleUpdate }: any) {
       <h3 className="text-xl font-semibold text-gray-800 mb-6">
         Update Location
       </h3>
-      <form className="grid grid-cols-2 gap-6" onSubmit={handleUpdateLocation}>
+{/* <div className="h-[400px] overflow-y-auto pr-2"> */}
+        <form className="grid grid-cols-2 gap-6" onSubmit={handleUpdateLocation}>
         {/* Address Line */}
         <div>
           <label className="text-sm font-semibold text-gray-700 mb-1 block">
@@ -224,6 +225,7 @@ export default function Location({ user, handleUpdate }: any) {
           </button>
         </div>
       </form>
+      {/* </div> */}
     </>
   );
 }

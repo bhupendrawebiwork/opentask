@@ -2,7 +2,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains:  ['localhost' , '74e7d9700020.ngrok-free.app'],
+    domains:  ['localhost' , '9b24d0e87d0a.ngrok-free.app'],
     // domains: ["*"],
   },
   experimental: {

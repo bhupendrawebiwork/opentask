@@ -1,6 +1,9 @@
 import { Heart, CheckCircle, Star, MapPin } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function TaskCard({ task, onClick }: any) {
+  const router = useRouter();
+  
   return (
     <div
       onClick={()=>onClick(task)}
@@ -57,15 +60,27 @@ export default function TaskCard({ task, onClick }: any) {
       <p className="text-gray-500 text-sm mt-2">{task?.description}</p>
 
       <div className="mt-4 flex gap-2 flex-wrap">
-        {["API", "INTEGRATION", "AI", "CREATION"].map((tag) => (
-          <span
-            key={tag}
-            className="bg-gray-200 text-gray-600 text-xs px-3 py-1 rounded-full"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
+  {["API", "INTEGRATION", "AI", "CREATION"].map((tag) => (
+    <span
+      key={tag}
+      className="bg-gray-200 text-gray-600 text-xs px-3 py-1 rounded-full"
+    >
+      {tag}
+    </span>
+  ))}
+
+  {/* View Bids Button */}
+  <button
+    onClick={(e) => {
+      e.stopPropagation();
+      router.push(`/bid-status?taskId=${task._id}`);
+    }}
+    className="ml-auto mt-2 text-sm text-blue-600 hover:underline font-medium"
+  >
+    View Bids →
+  </button>
+</div>
+
     </div>
   );
 }

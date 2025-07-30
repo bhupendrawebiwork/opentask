@@ -49,11 +49,12 @@ export default function PostTaskPage() {
       {/* <Navbar /> */}
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 p-10" style={{ backgroundColor: "#F7F5F8" }}>
+        <main className="flex-1 p-10 bg-[#F7F5F8] max-h-[85vh] overflow-y-auto">
           <h1 className="text-xl font-bold mb-2 text-black ml-10">Post Task</h1>
-          <div className="bg-white rounded-xl p-10 m-10">
+
+          <div className="bg-white rounded-xl p-10 m-10 ">
             <h1 className="text-xl font-semibold mb-6 text-black">Location</h1>
-            <div className="flex justify-items-end border border-gray-400 rounded-xl overflow-hidden w-fit absolute top-46 right-23 mt-4 mr-4 z-10">
+            <div className="flex justify-items-end border border-gray-400 rounded-xl overflow-hidden w-fit relative bottom-12 left-300 mt-4 mr-4 z-10">
               <button
                 className={`px-6 py-2 text-sm font-semibold transition-all duration-300 rounded-r-xl ${
                   !isRemote

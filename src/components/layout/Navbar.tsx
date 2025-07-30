@@ -97,10 +97,10 @@ const Navbar = () => {
 
             {/* Toggle Role Dropdown */}
             <li>
-              <div className="bg-black rounded-full p-1 flex w-[140px] text-white font-medium text-sm">
+              <div className="bg-black rounded-xl p-1 flex w-[140px] text-white font-medium text-sm">
                 <button
                   onClick={() => setSelectedRole(TASKER)}
-                  className={`flex-1 py-1 rounded-full transition ${
+                  className={`flex-1 py-1 rounded-xl transition ${
                     selectedRole === TASKER ? "bg-white text-black" : ""
                   }`}
                 >
@@ -108,7 +108,7 @@ const Navbar = () => {
                 </button>
                 <button
                   onClick={() => setSelectedRole(POSTER)}
-                  className={`flex-1 py-1 rounded-full transition ${
+                  className={`flex-1 py-1 rounded-xl transition ${
                     selectedRole === POSTER ? "bg-white text-black" : ""
                   }`}
                 >
