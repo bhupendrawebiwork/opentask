@@ -12,29 +12,33 @@ const Navbar = () => {
   const pathname = usePathname();
   const { authUser } = useAuthStore();
   const [userName, setUserName] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
 
   useEffect(() => {
     if (authUser?.name) {
       setUserName(authUser.name);
+    }
+    if (authUser?.role) {
+      setSelectedRole(authUser.role); // default to actual role
     }
   }, [authUser]);
 
   const isLoggedIn = !!authUser;
 
   const navLinksPoster = [
-    // { href: "/", label: "Browse Tasks" },
     { href: "/my-tasks", label: "My Tasks" },
-    // { href: "/my-bids", label: "My Bids" },
     { href: "/message", label: "Message" },
     { href: "/bid-status", label: "Bids Status" },
   ];
+
   const navLinksTasker = [
     { href: "/", label: "Browse Tasks" },
-    // { href: "/my-tasks", label: "My Tasks" },
     { href: "/my-bids", label: "My Bids" },
     { href: "/message", label: "Message" },
-    // { href: "/bid-status", label: "Bids Status" },
   ];
+
+  const displayedLinks =
+    selectedRole === TASKER ? navLinksTasker : navLinksPoster;
 
   return (
     <nav className="flex justify-between items-center px-6 md:px-16 py-4 bg-white shadow-sm border-b border-gray-200">
@@ -45,24 +49,24 @@ const Navbar = () => {
       <ul className="flex flex-wrap gap-4 md:gap-6 items-center text-sm md:text-base font-semibold text-gray-700">
         {isLoggedIn ? (
           <>
-            {(authUser.role === TASKER ? navLinksTasker : navLinksPoster).map(
-              (link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className={`pb-2 transition ${
-                      pathname === link.href
-                        ? "border-b-2 border-blue-500"
-                        : "hover:text-blue-500"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              )
-            )}
+            {/* Nav Links */}
+            {displayedLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={`pb-2 transition ${
+                    pathname === link.href
+                      ? "border-b-2 border-blue-500"
+                      : "hover:text-blue-500"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
 
-            {authUser.role === POSTER ? (
+            {/* Post Task Button - only for Poster */}
+            {selectedRole === POSTER ? (
               <li>
                 <Link
                   href="/post-task"
@@ -73,6 +77,11 @@ const Navbar = () => {
               </li>
             ) : null}
 
+            {/* Notification Bell */}
+            <li>
+              <NotificationDropdown />
+            </li>
+            {/* Profile */}
             <li>
               <Link href="/auth/profile" className="flex items-center gap-2">
                 <Image
@@ -86,9 +95,26 @@ const Navbar = () => {
               </Link>
             </li>
 
-            {/* 🔔 Notification Bell Icon */}
+            {/* Toggle Role Dropdown */}
             <li>
-              <NotificationDropdown />
+              <div className="bg-black rounded-full p-1 flex w-[140px] text-white font-medium text-sm">
+                <button
+                  onClick={() => setSelectedRole(TASKER)}
+                  className={`flex-1 py-1 rounded-full transition ${
+                    selectedRole === TASKER ? "bg-white text-black" : ""
+                  }`}
+                >
+                  Tasker
+                </button>
+                <button
+                  onClick={() => setSelectedRole(POSTER)}
+                  className={`flex-1 py-1 rounded-full transition ${
+                    selectedRole === POSTER ? "bg-white text-black" : ""
+                  }`}
+                >
+                  Poster
+                </button>
+              </div>
             </li>
           </>
         ) : (

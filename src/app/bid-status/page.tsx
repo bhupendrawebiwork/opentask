@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import BidStatusCard from "@/components/common/BidStatusCard";
-import BidEditOverlay from "@/components/common/BidEditOverlay";
+import MyBidCard from "@/components/common/MyBidCard";
 
 const dummyBids = [
   {
@@ -35,11 +34,11 @@ const dummyBids = [
     clientPrice: 300,
     status: "Accepted",
   },
+  // Add more dummy bids if needed
 ];
 
 export default function BidStatusPage() {
   const [statusFilter, setStatusFilter] = useState("All");
-  const [selectedBid, setSelectedBid] = useState(null);
 
   const filteredBids =
     statusFilter === "All"
@@ -47,9 +46,9 @@ export default function BidStatusPage() {
       : dummyBids.filter((bid) => bid.status === statusFilter);
 
   return (
-    <div className="flex h-screen bg-[#F4F8FF] relative overflow-hidden">
+    <div className="flex bg-[#F4F8FF] h-screen overflow-hidden">
       {/* Sidebar Filter */}
-      <aside className="w-[300px] p-6 overflow-y-auto sticky top-0 h-screen bg-white border-r border-gray-200">
+      <aside className="w-[300px] p-6 sticky top-0 h-screen overflow-y-auto bg-white shadow-md">
         <h3 className="text-lg font-semibold mb-4">Filter</h3>
 
         <input
@@ -81,15 +80,17 @@ export default function BidStatusPage() {
 
         <div className="mb-4">
           <h4 className="font-semibold mb-2">Job Type</h4>
-          {["Hourly base", "Monthly base", "Contract base"].map((label, i) => (
-            <label
-              key={label}
-              className="flex items-center space-x-2 text-sm mb-2"
-            >
-              <input type="checkbox" defaultChecked={i === 0} />
-              <span>{label}</span>
-            </label>
-          ))}
+          {["Hourly base", "Monthly base", "Contract base"].map(
+            (label, i) => (
+              <label
+                key={label}
+                className="flex items-center space-x-2 text-sm mb-2"
+              >
+                <input type="checkbox" defaultChecked={i === 0} />
+                <span>{label}</span>
+              </label>
+            )
+          )}
 
           <div className="flex gap-2 mt-2">
             <input
@@ -126,18 +127,13 @@ export default function BidStatusPage() {
 
       {/* Main Content */}
       <main className="flex-1 p-6 overflow-y-auto h-screen">
-        <h1 className="text-2xl font-bold mb-6 text-black">Bids Status</h1>
-        <div className="flex flex-col gap-4">
+         <h1 className="text-2xl font-bold mb-6 text-black">My Bids</h1>
+        <div className="space-y-4 pb-20">
           {filteredBids.map((bid) => (
-            <BidStatusCard key={bid.id} bid={bid} onClick={() => setSelectedBid(bid)} />
+            <MyBidCard key={bid.id} bid={bid} />
           ))}
         </div>
       </main>
-
-      {/* Overlay */}
-      {selectedBid && (
-        <BidEditOverlay bid={selectedBid} onClose={() => setSelectedBid(null)} />
-      )}
     </div>
   );
 }
