@@ -17,7 +17,7 @@ export const useChatStore = create((set, get) => ({
       const res = await axiosInstance.get("/user/all/" + authUser.id);
       set({
         users: res.data.map((elm) => ({
-          _id: elm.id,
+          id: elm.id,
           name: elm.name,
           fullName: elm.name,
           email: elm.email,
@@ -49,11 +49,11 @@ export const useChatStore = create((set, get) => ({
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
     try {
-      // const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
+      // const res = await axiosInstance.post(`/messages/send/${selectedUser.id}`, messageData);
       const { socket, authUser } = useAuthStore.getState();
       const cleanMessage = {
         text: messageData.text,
-        receiverId: selectedUser?._id,
+        receiverId: selectedUser?.id,
         senderId: authUser.id,
       };
       socket.emit("sendMessage", cleanMessage);
@@ -67,7 +67,8 @@ export const useChatStore = create((set, get) => ({
   },
 
   subscribeToMessages: () => {
-    const { selectedUser , authUser} = get();
+    const { selectedUser } = get();
+    const { authUser } = useAuthStore.getState();
     if (!selectedUser) return;
 
     const socket = useAuthStore.getState().socket;
@@ -75,14 +76,14 @@ export const useChatStore = create((set, get) => ({
     socket.on("newMessage", (newMessage) => {
       console.log("newMessage ", newMessage);
       const isForCurrentChat =
-        (newMessage.senderId === selectedUser._id &&
+        (newMessage.senderId === selectedUser.id &&
           newMessage.receiverId === authUser.id) ||
-        (newMessage.receiverId === selectedUser._id &&
+        (newMessage.receiverId === selectedUser.id &&
           newMessage.senderId === authUser.id);
 
       if (!isForCurrentChat) return;
       // const isMessageSentFromSelectedUser =
-      //   newMessage.receiverId === selectedUser._id;
+      //   newMessage.receiverId === selectedUser.id;
       // if (!isMessageSentFromSelectedUser) {
       //   // return;
       // }
@@ -99,7 +100,6 @@ export const useChatStore = create((set, get) => ({
   },
 
   setSelectedUser: (selectedUser) => {
-    console.log("setSelectedUser", selectedUser);
     set({ selectedUser });
   },
 }));
