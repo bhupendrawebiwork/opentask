@@ -3,174 +3,162 @@
 import { useEffect, useState } from "react";
 import TaskCard from "@/components/common/Taskcard";
 import TaskDetailsOverlay from "@/components/common/TaskDetailsOverlay";
-import { baseUrl } from "@/config/constent";
 import { Task } from "@/types/types";
 import { useTaskStore } from "@/store/useTaskStore";
 
 export default function HomePage() {
   const [showOverlay, setShowOverlay] = useState(false);
-  // const [tasks, setTasks] = useState<Task[]>([]);
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
-  // const [loading, setLoading] = useState(true);
 
+  // Filters
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [minRate, setMinRate] = useState("");
-  const [maxRate, setMaxRate] = useState("");
-  const [selectedFixedPrices, setSelectedFixedPrices] = useState<string[]>([]);
+  const [sortByPrice, setSortByPrice] = useState<string>(""); // "high" | "low" | "mid"
+  const [sortByTime, setSortByTime] = useState<string>(""); // "newest" | "1day" | "2days"
+  const [selectedRatings, setSelectedRatings] = useState<number[]>([]); // 1-5
 
- const { fetchTasks, tasks, loading } = useTaskStore();
+  const { fetchTasks, tasks } = useTaskStore();
 
   useEffect(() => {
     fetchTasks();
   }, []);
 
   const handleClickOnTask = (task: Task) => {
-  setShowOverlay(true);
-  setCurrentTask({ ...task, isMine: false }); // you’re not the owner
-};
+    setShowOverlay(true);
+    setCurrentTask({ ...task, isMine: false });
+  };
 
+  // Filtering
+  const filteredTasks = tasks
+    .filter((task) => {
+      const matchesSearch = task.title.toLowerCase().includes(search.toLowerCase());
+      const matchesRating = selectedRatings.length
+        ? selectedRatings.includes(Math.floor(task.rating || 0))
+        : true;
 
-  const filteredTasks = tasks.filter((task) => {
-    const matchesSearch = task.title.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = selectedCategory ? task?.category === selectedCategory : true;
-    const matchesLevel = selectedLevels.length ? selectedLevels.includes(task?.level) : true;
-    const matchesType = selectedTypes.length ? selectedTypes.includes(task?.jobType) : true;
-    const matchesMinRate = minRate ? task?.rate >= parseFloat(minRate) : true;
-    const matchesMaxRate = maxRate ? task?.rate <= parseFloat(maxRate) : true;
+      return matchesSearch && matchesRating;
+    })
+    .sort((a, b) => {
+      // Price sort (mutually exclusive)
+      if (sortByPrice) {
+        if (sortByPrice === "high") return b.price - a.price;
+        if (sortByPrice === "low") return a.price - b.price;
+        if (sortByPrice === "mid") return Math.abs(a.price - 500) - Math.abs(b.price - 500);
+      }
 
-    const matchesFixedPrice = selectedFixedPrices.length
-      ? selectedFixedPrices.some((range) => {
-          const inrToUsd = 0.012; // Example conversion rate
-          const usdPrice = task?.price * inrToUsd;
-          if (range === "Less Than $100") return usdPrice < 100;
-          if (range === "$100 To $500") return usdPrice >= 100 && usdPrice <= 500;
-          if (range === "$500 To $1k") return usdPrice > 500 && usdPrice <= 1000;
-          if (range === "$1k To $5k") return usdPrice > 1000 && usdPrice <= 5000;
-          return false;
-        })
-      : true;
+      // Time sort
+      if (sortByTime) {
+        const aTime = new Date(a.createdAt).getTime();
+        const bTime = new Date(b.createdAt).getTime();
+        if (sortByTime === "newest") return bTime - aTime;
+        if (sortByTime === "1day")
+          return (new Date().getTime() - bTime) - (new Date().getTime() - aTime);
+        if (sortByTime === "2days")
+          return (new Date().getTime() - bTime) - (new Date().getTime() - aTime);
+      }
+      return 0;
+    });
 
-    return (
-      matchesSearch &&
-      matchesCategory &&
-      matchesLevel &&
-      matchesType &&
-      matchesMinRate &&
-      matchesMaxRate &&
-      matchesFixedPrice
+  // Toggle for mutual exclusivity between Price and Time sort
+  const handlePriceSortChange = (value: string) => {
+    setSortByPrice(value);
+    setSortByTime(""); // Reset time sort
+  };
+
+  const handleTimeSortChange = (value: string) => {
+    setSortByTime(value);
+    setSortByPrice(""); // Reset price sort
+  };
+
+  const toggleRating = (rating: number) => {
+    setSelectedRatings((prev) =>
+      prev.includes(rating) ? prev.filter((r) => r !== rating) : [...prev, rating]
     );
-  });
+  };
 
   return (
     <div className="min-h-screen bg-white relative">
       <div className="bg-[#F7F5F8] h-[calc(100vh-64px)] flex overflow-hidden">
-  <aside className="w-[300px] p-6 bg-white border-r border-gray-200 h-full overflow-y-auto">
-    <h3 className="text-lg font-semibold mb-4">Filter</h3>
+        {/* Sidebar Filters */}
+        <aside className="w-[300px] p-6 bg-white border-r border-gray-200 h-full overflow-y-auto">
+          <h3 className="text-lg font-semibold mb-4">Filters</h3>
 
-    <input
-      type="text"
-      placeholder="Search Task.."
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-      className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-4"
-    />
-
-    <select
-      value={selectedCategory}
-      onChange={(e) => setSelectedCategory(e.target.value)}
-      className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-6"
-    >
-      <option value="">Select Category</option>
-      <option value="Plumbing">Plumbing</option>
-      <option value="Electrical">Electrical</option>
-    </select>
-
-    {/* Levels Filter */}
-    <div className="mb-4">
-      <h4 className="font-semibold mb-2">Levels</h4>
-      {["Entry Level", "Intermediate & Professionals", "Expert & high Level Exp."].map((label) => (
-        <label key={label} className="flex items-center space-x-2 text-sm mb-2">
+          {/* Search */}
           <input
-            type="checkbox"
-            checked={selectedLevels.includes(label)}
-            onChange={() =>
-              setSelectedLevels((prev) =>
-                prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]
-              )
-            }
+            type="text"
+            placeholder="Search Task..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-6"
           />
-          <span>{label}</span>
-        </label>
-      ))}
-    </div>
 
-    {/* Job Type Filter */}
-    <div className="mb-4">
-      <h4 className="font-semibold mb-2">Job Type</h4>
-      {["Hourly base", "Monthly base", "Contract base"].map((label) => (
-        <label key={label} className="flex items-center space-x-2 text-sm mb-2">
-          <input
-            type="checkbox"
-            checked={selectedTypes.includes(label)}
-            onChange={() =>
-              setSelectedTypes((prev) =>
-                prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]
-              )
-            }
-          />
-          <span>{label}</span>
-        </label>
-      ))}
-      <div className="flex gap-2 mt-2">
-        <input
-          type="number"
-          placeholder="$ min"
-          value={minRate}
-          onChange={(e) => setMinRate(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm"
-        />
-        <input
-          type="number"
-          placeholder="$ max"
-          value={maxRate}
-          onChange={(e) => setMaxRate(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm"
-        />
+          {/* Sort by Price */}
+          <div className="mb-6">
+            <h4 className="font-semibold mb-2">Sort by Price</h4>
+            {["high", "low", "mid"].map((value) => (
+              <label key={value} className="flex items-center space-x-2 text-sm mb-2">
+                <input
+                  type="radio"
+                  name="priceSort"
+                  checked={sortByPrice === value}
+                  onChange={() => handlePriceSortChange(value)}
+                />
+                <span>
+                  {value === "high" && "High → Low"}
+                  {value === "low" && "Low → High"}
+                  {value === "mid" && "Mid Price"}
+                </span>
+              </label>
+            ))}
+          </div>
+
+          {/* Sort by Time */}
+          <div className="mb-6">
+            <h4 className="font-semibold mb-2">Sort by Time</h4>
+            {["newest", "1day", "2days"].map((value) => (
+              <label key={value} className="flex items-center space-x-2 text-sm mb-2">
+                <input
+                  type="radio"
+                  name="timeSort"
+                  checked={sortByTime === value}
+                  onChange={() => handleTimeSortChange(value)}
+                />
+                <span>
+                  {value === "newest" && "Newest"}
+                  {value === "1day" && "1 Day Ago"}
+                  {value === "2days" && "2 Days Ago"}
+                </span>
+              </label>
+            ))}
+          </div>
+
+          {/* Filter by Ratings */}
+          <div>
+            <h4 className="font-semibold mb-2">Filter by Rating</h4>
+            {[5, 4, 3, 2, 1].map((rating) => (
+              <label key={rating} className="flex items-center space-x-2 text-sm mb-2">
+                <input
+                  type="checkbox"
+                  checked={selectedRatings.includes(rating)}
+                  onChange={() => toggleRating(rating)}
+                />
+                <span>{rating} Star{rating > 1 && "s"}</span>
+              </label>
+            ))}
+          </div>
+        </aside>
+
+        {/* Scrollable Task List */}
+        <main className="flex-1 p-8 overflow-y-auto h-full">
+          <h1 className="text-2xl font-bold mb-6 text-black">Browse Tasks</h1>
+          {filteredTasks.length > 0 ? (
+            filteredTasks.map((task: Task, i) => (
+              <TaskCard key={i} task={task} onClick={() => handleClickOnTask(task)} />
+            ))
+          ) : (
+            <p className="text-gray-500">No tasks found</p>
+          )}
+        </main>
       </div>
-    </div>
-
-    {/* Fixed Price Filter */}
-    <div>
-      <h4 className="font-semibold mb-2">Fixed Price</h4>
-      {["Less Than $100", "$100 To $500", "$500 To $1k", "$1k To $5k"].map((range) => (
-        <label key={range} className="flex items-center space-x-2 text-sm mb-2">
-          <input
-            type="checkbox"
-            checked={selectedFixedPrices.includes(range)}
-            onChange={() =>
-              setSelectedFixedPrices((prev) =>
-                prev.includes(range) ? prev.filter((r) => r !== range) : [...prev, range]
-              )
-            }
-          />
-          <span>{range}</span>
-        </label>
-      ))}
-    </div>
-  </aside>
-
-  {/* Scrollable Task List */}
-  <main className="flex-1 p-8 overflow-y-auto h-full">
-     <h1 className="text-2xl font-bold mb-6 text-black">Browse Tasks</h1>
-    {filteredTasks.map((task: Task, i) => (
-      <TaskCard key={i} task={task} onClick={() => handleClickOnTask(task)} />
-    ))}
-  </main>
-</div>
-
 
       {showOverlay && currentTask && (
         <TaskDetailsOverlay task={currentTask} onClose={() => setShowOverlay(false)} />
@@ -178,4 +166,3 @@ export default function HomePage() {
     </div>
   );
 }
-

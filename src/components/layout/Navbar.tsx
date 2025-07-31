@@ -70,7 +70,7 @@ const Navbar = () => {
               <li>
                 <Link
                   href="/post-task"
-                  className="bg-black text-white px-4 py-2 rounded-xl hover:bg-gray-800"
+                  className="bg-[#27548a] text-white px-4 py-2 rounded-xl hover:bg-gray-800"
                 >
                   Post Task
                 </Link>
@@ -83,13 +83,13 @@ const Navbar = () => {
             </li>
             {/* Profile */}
             <li>
-              <Link href="/auth/profile" className="flex items-center gap-2">
+              <Link href="/auth/profile" className="flex items-center gap-2 ">
                 <Image
                   src="/assets/social-icons/profile.png"
                   alt="Profile"
                   width={36}
                   height={36}
-                  className="rounded-full"
+                  className="rounded-full "
                 />
                 <span className="hidden md:inline">{userName || "User"}</span>
               </Link>
@@ -97,11 +97,11 @@ const Navbar = () => {
 
             {/* Toggle Role Dropdown */}
             <li>
-              <div className="bg-black rounded-xl p-1 flex w-[140px] text-white font-medium text-sm">
+              <div className="bg-[#27548a] rounded-xl p-1 flex w-[140px] text-white font-medium text-sm">
                 <button
                   onClick={() => setSelectedRole(TASKER)}
                   className={`flex-1 py-1 rounded-xl transition ${
-                    selectedRole === TASKER ? "bg-white text-black" : ""
+                    selectedRole === TASKER ? "bg-white text-[#27548a]" : ""
                   }`}
                 >
                   Tasker
@@ -109,7 +109,7 @@ const Navbar = () => {
                 <button
                   onClick={() => setSelectedRole(POSTER)}
                   className={`flex-1 py-1 rounded-xl transition ${
-                    selectedRole === POSTER ? "bg-white text-black" : ""
+                    selectedRole === POSTER ? "bg-white text-[#27548a]" : ""
                   }`}
                 >
                   Poster
