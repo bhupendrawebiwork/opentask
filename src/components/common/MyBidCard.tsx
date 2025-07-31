@@ -2,15 +2,34 @@
 
 import Image from "next/image";
 import { Star, MapPin, Volume2, Mic, Repeat, Heart } from "lucide-react";
+import { getAvatarUrl } from "@/config/constent";
+import { Bid } from "@/types/types";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useChatStore } from "@/store/useChatStore";
+import { useRouter } from "next/navigation";
 
-export default function MyBidCard({ tradie }: any) {
+export default function MyBidCard({ bid }: { bid: Bid }) {
+  const router = useRouter();
+  const { authUser } = useAuthStore();
+  const { createChat } = useChatStore();
+
+  const handleClickOnChat = async () => {
+    const payload = {
+      bidId: bid.id,
+      taskId: bid.taskId,
+      taskerId: bid.userId,
+      posterId: authUser.id,
+    };
+    const res = await createChat(payload);
+    router.push(`/message`);
+  };
   return (
     <div className="bg-white rounded-2xl shadow border border-gray-200 p-5 flex flex-col gap-3 w-full mb-6">
       {/* Top: Profile, contact, posted */}
       <div className="flex justify-between items-start">
         <div className="flex gap-3">
           <Image
-            src={tradie?.image || "/assets/profile.png"}
+            src={getAvatarUrl(bid?.user?.profile.avatar || null)}
             alt="profile"
             width={55}
             height={55}
@@ -18,7 +37,7 @@ export default function MyBidCard({ tradie }: any) {
           />
           <div className="text-sm">
             <div className="flex items-center gap-1 font-semibold text-gray-900 ">
-              {tradie?.name || "Robert Froze"}
+              {bid.user?.name || "Robert Froze"}
               <Image
                 src="/assets/verified.png"
                 alt="verified"
@@ -34,15 +53,14 @@ export default function MyBidCard({ tradie }: any) {
                 <Star size={16} strokeWidth={1.5} />
               </div>{" "}
               <div className="text-xs text-gray-500">
-                {tradie?.email || "| robert.fox@gmail.com"} |{" "}
-                {tradie?.phone || "+167964578900"}
+                {bid.user?.email || "| robert.fox@gmail.com"} |{" "}
+                {bid.user?.phone || "+167964578900"}
               </div>
             </div>
 
             <div className="flex items-center gap-1 text-xs text-blue-400 mt-0.5">
               <MapPin size={13} />
-              {tradie?.address ||
-                "95 Mills Street, Victoria, 3996 Inverloch city Australia"}
+              {"95 Mills Street, Victoria, 3996 Inverloch city Australia"}
             </div>
           </div>
         </div>
@@ -76,8 +94,9 @@ export default function MyBidCard({ tradie }: any) {
           </button>
         </div>
         <div className="border border-gray-200 rounded-md px-4 py-4 mt-1 text-sm text-gray-700 bg-[#FBFBFB]">
-          {tradie?.transcript ||
-            "Lorem ipsum dolor sit amet, consectetur adip elit, glië edsfg fgeg tempor gkbnrt. tdghfgn mn dnew lorem psum dolor sit amet, consectetur adip elit, glië edsfg fgeg tempor gkbnrt. tdghfgn mn dnewpsum dolor sit amet, consectetur adip elit, glië edsfg fgeg tempor gkbnrt. tdghfgn mn dnew psum dolor sit amet, consectetur adip elit, glië edsfg fgeg tempor gkbnrt. tdghfgn mn dnew psum dolor sit amet, consectetur adip elit, glië edsfg fgeg tempor gkbnrt. tdghfgn mn dnew"}
+          {
+            "Lorem ipsum dolor sit amet, consectetur adip elit, glië edsfg fgeg tempor gkbnrt. tdghfgn mn dnew lorem psum dolor sit amet, consectetur adip elit, glië edsfg fgeg tempor gkbnrt. tdghfgn mn dnewpsum dolor sit amet, consectetur adip elit, glië edsfg fgeg tempor gkbnrt. tdghfgn mn dnew psum dolor sit amet, consectetur adip elit, glië edsfg fgeg tempor gkbnrt. tdghfgn mn dnew psum dolor sit amet, consectetur adip elit, glië edsfg fgeg tempor gkbnrt. tdghfgn mn dnew"
+          }
         </div>
       </div>
 
@@ -86,14 +105,11 @@ export default function MyBidCard({ tradie }: any) {
         <div className="text-sm text-gray-800">
           <span className="font-semibold text-gray-600">Quoted Price :</span>{" "}
           <span className="text-green-600 font-semibold">
-            ${tradie?.quotedPrice || 300}
+            ${bid.offeredPrice || 300}
           </span>{" "}
-          |{" "}
-          <span className="font-semibold text-gray-600">
-            Expected Completion:
-          </span>{" "}
+          | <span className="font-semibold text-gray-600">Estimated Time:</span>{" "}
           <span className="text-gray-500">
-            {tradie?.expectedDate || "Aug 5, 2025"}
+            {bid?.offeredEstimatedTime || "Aug 5, 2025"}
           </span>
         </div>
       </div>
@@ -101,12 +117,14 @@ export default function MyBidCard({ tradie }: any) {
         <button className="bg-blue-400 text-white text-sm px-5 py-1.5 rounded-md font-medium hover:bg-blue-600 transition">
           Hire Now
         </button>
-        <a href="/message">
-          {" "}
-          <button className="bg-gray-800 text-white text-sm px-5 py-1.5 rounded-md font-medium hover:bg-gray-900 transition">
-            Chat with Tradie
-          </button>
-        </a>
+        {/* <a href="/message"> */}{" "}
+        <button
+          onClick={handleClickOnChat}
+          className="bg-gray-800 text-white text-sm px-5 py-1.5 rounded-md font-medium hover:bg-gray-900 transition"
+        >
+          Chat with Tradie
+        </button>
+        {/* </a> */}
       </div>
     </div>
   );

@@ -44,7 +44,6 @@ export default function PostTaskPage() {
       url: URL.createObjectURL(file),
       file: file,
     }));
-    console.log(mediaFiles, "mediaFiles ");
     setTaskData({
       ...taskData,
       media: mediaUrls,

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { toast } from "react-toastify";
 import { axiosInstance } from "@/lib/axios";
 import { Bid } from "@/types/types"; // You should define this type
+import { count } from "console";
 
 interface BidStore {
   bidData: Partial<Bid>;
@@ -94,3 +95,9 @@ export const useBidStore = create<BidStore>((set) => ({
     }
   },
 }));
+
+
+
+
+
+

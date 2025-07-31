@@ -24,7 +24,6 @@ export default function PostTaskPage() {
     });
     router.push("location");
   };
-  // console.log("Current Task Data:", taskData);
 
   return (
     <div className="min-h-screen bg-white">

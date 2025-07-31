@@ -63,7 +63,6 @@ export default function ServicesForm({ user, handleUpdate }: any) {
       skills: selectedSkills,
       other: selectedSkills.includes("Other") ? otherSkill : "",
     };
-    console.log("Submitted Data:", data);
     handleUpdate({ services: selectedSkills });
   };
 
