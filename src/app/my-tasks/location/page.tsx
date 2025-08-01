@@ -45,22 +45,20 @@ export default function PostTaskPage() {
   // console.log("updated Task Data:", taskData);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#f3f3e0]">
       {/* <Navbar /> */}
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 p-10 bg-[#F7F5F8] max-h-[85vh] overflow-y-auto">
-          <h1 className="text-xl font-bold mb-2 text-black ml-10">Post Task</h1>
-          
-
-          <div className="bg-white rounded-xl p-10 m-10 ">
+        <main className="flex-1 max-h-[95vh] overflow-y-auto">
+          {/* <h1 className="text-xl font-bold mb-2 text-[#27548a] ml-10">Post Task</h1> */}
+          <div className="bg-[#fffff8] rounded-xl p-10 m-7 ">
             <h1 className="text-xl font-semibold mb-6 text-black">Location</h1>
             <div className="flex justify-items-end border border-gray-400 rounded-xl overflow-hidden w-fit relative bottom-12 left-300 mt-4 mr-4 z-10">
               <button
                 className={`px-6 py-2 text-sm font-semibold transition-all duration-300 rounded-r-xl ${
                   !isRemote
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-blue-500"
+                    ? "bg-[#27548a] text-white"
+                    : "bg-white text-[#27548a]"
                 }`}
                 onClick={() => setIsRemote(false)}
               >
@@ -68,7 +66,7 @@ export default function PostTaskPage() {
               </button>
               <button
                 className={`px-6 py-2 text-sm font-semibold transition-all duration-300 rounded-l-xl ${
-                  isRemote ? "bg-blue-500 text-white" : "bg-white text-blue-400"
+                  isRemote ? "bg-[#27548a] text-white" : "bg-white text-[#27548a]"
                 }`}
                 onClick={() => setIsRemote(true)}
               >
@@ -198,7 +196,7 @@ export default function PostTaskPage() {
                 </Link>
                 <button
                   type="submit"
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-14 py-3 rounded-xl text-lg"
+                  className="bg-[#27548a] hover:bg-[#1d2834] text-white px-14 py-3 rounded-xl text-lg"
                 >
                   Next
                 </button>

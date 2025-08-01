@@ -54,17 +54,17 @@ export default function PostTaskPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#f3f3e0]">
       {/* <Navbar /> */}
       <div className="flex">
         <Sidebar />
 
-        <main className="flex-1 p-10 bg-[#F7F5F8]">
-          <h1 className="text-xl font-bold mb-4 text-black ml-10">Post Task</h1>
+        <main className="flex-1 p-7 max-h-[95vh] overflow-y-auto">
+          {/* <h1 className="text-xl font-bold mb-4 text-black ml-10">Post Task</h1> */}
 
           <form
             onSubmit={handleNext}
-            className="bg-white rounded-xl px-10 py-8 mx-10"
+            className="bg-[#fffff8] rounded-xl px-10 py-8 mx-10"
           >
             <h2 className="text-md font-semibold text-black mb-6">Media</h2>
 
@@ -129,7 +129,7 @@ export default function PostTaskPage() {
               </Link>
               <button
                 type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white px-14 py-3 rounded-xl text-lg"
+                className="bg-[#27548a] hover:bg-[#1d2834] text-white px-14 py-3 rounded-xl text-lg"
               >
                 Preview
               </button>

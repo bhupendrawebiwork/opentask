@@ -32,13 +32,13 @@ export default function PostTaskPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#f3f3e0]">
       {/* <Navbar /> */}
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 p-10" style={{ backgroundColor: "#F7F5F8" }}>
-          <h1 className="text-xl font-bold mb-2 text-black ml-10">Post Task</h1>
-          <div className="bg-white rounded-xl p-10 m-10">
+        <main className="flex-1 max-h-[95vh] overflow-y-auto">
+          {/* <h1 className="text-xl font-bold mb-2 text-black ml-10">Post Task</h1> */}
+          <div className="bg-[#fffff8] rounded-xl p-10 m-7">
             <h1 className="text-xl font-semibold mb-6 text-black">
               Estimated Budget
             </h1>
@@ -93,7 +93,7 @@ export default function PostTaskPage() {
                 </Link>
                 <button
                   type="submit"
-                  className="bg-blue-400 text-white px-14 py-3 rounded-xl hover:bg-blue-600 text-lg"
+                  className="bg-[#27548a] text-white px-14 py-3 rounded-xl hover:bg-[#1d2834] text-lg"
                 >
                   Next
                 </button>

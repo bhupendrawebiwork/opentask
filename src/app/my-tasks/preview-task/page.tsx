@@ -57,15 +57,15 @@ export default function PostTaskPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#f3f3e0]">
       {/* <Navbar /> */}
       <div className="flex">
         <Sidebar />
 
-           <main className="flex-1 p-10 bg-[#F7F5F8] overflow-y-auto max-h-[85vh]">
-          <h1 className="text-xl font-bold mb-4 text-black ml-10">Post Task</h1>
+           <main className="flex-1 p-7  overflow-y-auto max-h-[85vh]">
+          {/* <h1 className="text-xl font-bold mb-4 text-black ml-10">Post Task</h1> */}
 
-          <div className="bg-white rounded-xl px-10 py-8 mx-10 space-y-10">
+          <div className="bg-[#fffff8] rounded-xl px-10 py-8 mx-10 space-y-10">
             {/* Task Details */}
             <section>
               <div className="flex justify-between items-start mb-4">
@@ -89,7 +89,7 @@ export default function PostTaskPage() {
               )}
             </section>
 
-            <hr />
+            <hr className="border-[#27548a]" />
 
             {/* Location */}
             <section>
@@ -213,7 +213,7 @@ export default function PostTaskPage() {
               <button
                 type="button"
                 onClick={handleSubmit}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-14 py-3 rounded-xl text-lg"
+                className="bg-[#27548a] hover:bg-[#1d2834] text-white px-14 py-3 rounded-xl text-lg"
               >
                 Submit
               </button>
