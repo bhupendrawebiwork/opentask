@@ -6,46 +6,51 @@ import { Heart, Play } from "lucide-react";
 export default function MyBidCard({ tradie }: any) {
   return (
     <div className="bg-white rounded-2xl shadow border border-gray-200 p-5 flex justify-between gap-5 w-full mb-6">
-      {/* LEFT SECTION */}
       <div className="flex-1 flex flex-col">
         {/* Top: Profile Info */}
-        <div className="flex">
-          <div>
-            <div className="flex justify-between items-start mb-2">
-              <div className="flex gap-3">
-                <Image
-                  src={tradie?.image || "/assets/profile.png"}
-                  alt="profile"
-                  width={60}
-                  height={60}
-                  className="rounded-full object-cover"
-                />
-                <div>
-                  <div className="flex items-center gap-1 font-semibold text-gray-900 text-base">
-                    {tradie?.name || "Robert Froze"}
-                    
-                  </div>
-                  <div className="flex text-yellow-400">★★★★☆  <span className="text-gray-500 text-sm ml-1">(1)</span></div>
-                   
-                  <div className="text-xs text-gray-600 mt-0.5">
-                    {tradie?.email || "robert.fro@gmail.com"} |{" "}
-                    {tradie?.phone || "+167894578000"}
-                  </div>
-                  <div className="text-xs text-gray-600">
-                    {tradie?.address ||
-                      "94 Mills Street, Victoria, 3866 Inverloch city Australia"}
-                  </div>
-                </div>
+        <div className="flex justify-between items-start mb-2">
+          <div className="flex gap-3">
+            <Image
+              src={tradie?.image || "/assets/profile.png"}
+              alt="profile"
+              width={60}
+              height={60}
+              className="rounded-full object-cover"
+            />
+            <div>
+              <div className="flex items-center gap-1 font-semibold text-gray-900 text-base">
+                {tradie?.name || "Robert Froze"}
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600 font-medium mr-6">
-                <span className="text-xs sm:text-sm">Posted 3 Days Ago</span>
-                <Heart className="bg-[#27548a]  text-white rounded-full p-1"
-                />
+              <div className="flex text-yellow-400">
+                ★★★★☆ <span className="text-gray-500 text-sm ml-1">(1)</span>
+              </div>
+              <div className="text-xs text-gray-600 mt-0.5">
+                {tradie?.email || "robert.fro@gmail.com"} |{" "}
+                {tradie?.phone || "+167894578000"}
+              </div>
+              <div className="text-xs text-gray-600">
+                {tradie?.address ||
+                  "94 Mills Street, Victoria, 3866 Inverloch city Australia"}
               </div>
             </div>
+          </div>
 
+          {/* Right Side: Posted + Heart */}
+          <div className="flex items-center gap-2 text-sm text-[#27548a] font-medium">
+            <span className="text-xs sm:text-sm">Posted 3 Days Ago</span>
+            <Heart
+              size={18}
+              className="text-white p-1 fill-white bg-[#27548a] rounded-full"
+            />
+          </div>
+        </div>
+
+        {/* Audio + Transcript (60%) and Map (40%) */}
+        <div className="flex flex-col md:flex-row gap-5 mt-6 mb-6">
+          {/* LEFT 60% */}
+          <div className="flex-1 md:w-[60%]">
             {/* Audio Player */}
-            <div className="flex items-center gap-2 mt-6 mr-6 mb-6 bg-gray-50 p-6 rounded-full">
+            <div className="flex items-center gap-2 bg-gray-50 p-6 rounded-full mb-3">
               <Play size={16} className="text-[#27548a]" />
               <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div className="w-1/3 h-full bg-[#27548a]"></div>
@@ -57,7 +62,7 @@ export default function MyBidCard({ tradie }: any) {
             </div>
 
             {/* Transcript */}
-            <div className="mt-3">
+            <div className="mt-3 px-2">
               <h4 className="text-sm font-semibold text-gray-700 mb-1">
                 Transcript
               </h4>
@@ -67,11 +72,12 @@ export default function MyBidCard({ tradie }: any) {
               </p>
             </div>
           </div>
-          {/* RIGHT MAP */}
-          <div className="w-[120px] h-[220px] shrink-0 mt-1 rounded-md overflow-hidden shadow">
+
+          {/* RIGHT 40% MAP */}
+          <div className="md:w-[40%] h-[180px] md:h-[180px] rounded-md overflow-hidden shadow">
             <iframe
-              width="120"
-              height="120"
+              width="100%"
+              height="100%"
               loading="lazy"
               allowFullScreen
               src={`https://www.google.com/maps?q=${encodeURIComponent(
@@ -79,10 +85,16 @@ export default function MyBidCard({ tradie }: any) {
                   "94 Mills Street, Victoria, 3866 Inverloch city Australia"
               )}&output=embed`}
               className="w-full h-full rounded-md"
+              style={{
+                border: "0",
+                filter: "grayscale(80%) hue-rotate(190deg) saturate(200%)",
+              }}
             />
           </div>
         </div>
-        <hr className="border-gray-200 my-6"></hr>
+
+        <hr className="border-gray-200 my-6" />
+
         {/* Price + Buttons */}
         <div className="mt-3 flex justify-between items-center flex-wrap gap-3">
           <div className="text-sm font-semibold text-gray-700">
