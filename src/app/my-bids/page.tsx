@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BidStatusCard from "@/components/common/BidStatusCard";
 import BidEditOverlay from "@/components/common/BidEditOverlay";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useBidStore } from "@/store/useBidStore";
 
 const dummyBids = [
   {
@@ -40,11 +42,19 @@ const dummyBids = [
 export default function MyBidsPage() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [selectedBid, setSelectedBid] = useState(null);
+  const { myBids, fetchBidsForUser } = useBidStore();
+  const { authUser } = useAuthStore();
+
+  useEffect(() => {
+    if (authUser) {
+      fetchBidsForUser(authUser?.id);
+    }
+  }, []);
 
   const filteredBids =
     statusFilter === "All"
-      ? dummyBids
-      : dummyBids.filter((bid) => bid.status === statusFilter);
+      ? myBids
+      : myBids?.filter((bid) => bid.status === statusFilter);
 
   return (
     <div className="flex bg-[#f3f3e0] h-screen overflow-hidden">
@@ -160,14 +170,21 @@ export default function MyBidsPage() {
         <h1 className="text-2xl font-bold mb-6 text-[#27548a]">My Bids</h1>
         <div className="flex flex-col gap-4">
           {filteredBids.map((bid) => (
-            <BidStatusCard key={bid.id} bid={bid} onClick={() => setSelectedBid(bid)} />
+            <BidStatusCard
+              key={bid.id}
+              bid={bid}
+              onClick={() => setSelectedBid(bid)}
+            />
           ))}
         </div>
       </main>
 
       {/* Overlay */}
       {selectedBid && (
-        <BidEditOverlay bid={selectedBid} onClose={() => setSelectedBid(null)} />
+        <BidEditOverlay
+          bid={selectedBid}
+          onClose={() => setSelectedBid(null)}
+        />
       )}
     </div>
   );

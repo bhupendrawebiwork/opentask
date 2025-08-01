@@ -1,9 +1,28 @@
 "use client";
 
 import Image from "next/image";
-import { Heart, Play } from "lucide-react";
+import { Star, MapPin, Volume2, Mic, Repeat, Heart, Play } from "lucide-react";
+import { getAvatarUrl } from "@/config/constent";
+import { Bid } from "@/types/types";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useChatStore } from "@/store/useChatStore";
+import { useRouter } from "next/navigation";
 
-export default function MyBidCard({ tradie }: any) {
+export default function MyBidCard({ bid }: { bid: Bid }) {
+  const router = useRouter();
+  const { authUser } = useAuthStore();
+  const { createChat } = useChatStore();
+
+  const handleClickOnChat = async () => {
+    const payload = {
+      bidId: bid.id,
+      taskId: bid.taskId,
+      taskerId: bid.userId,
+      posterId: authUser.id,
+    };
+    const res = await createChat(payload);
+    router.push(`/message`);
+  };
   return (
     <div className="bg-white rounded-2xl shadow border border-gray-200 p-5 flex justify-between gap-5 w-full mb-6">
       <div className="flex-1 flex flex-col">
@@ -11,7 +30,7 @@ export default function MyBidCard({ tradie }: any) {
         <div className="flex justify-between items-start mb-2">
           <div className="flex gap-3">
             <Image
-              src={tradie?.image || "/assets/profile.png"}
+              src={bid.user?.profile?.avatar || "/assets/profile.png"}
               alt="profile"
               width={60}
               height={60}
@@ -19,17 +38,17 @@ export default function MyBidCard({ tradie }: any) {
             />
             <div>
               <div className="flex items-center gap-1 font-semibold text-gray-900 text-base">
-                {tradie?.name || "Robert Froze"}
+                {bid.user?.name || "Robert Froze"}
               </div>
               <div className="flex text-yellow-400">
                 ★★★★☆ <span className="text-gray-500 text-sm ml-1">(1)</span>
               </div>
               <div className="text-xs text-gray-600 mt-0.5">
-                {tradie?.email || "robert.fro@gmail.com"} |{" "}
-                {tradie?.phone || "+167894578000"}
+                {bid.user?.email || "robert.fro@gmail.com"} |{" "}
+                {bid.user?.phone || "+167894578000"}
               </div>
               <div className="text-xs text-gray-600">
-                {tradie?.address ||
+                {bid.user?.profile.location.toString() ||
                   "94 Mills Street, Victoria, 3866 Inverloch city Australia"}
               </div>
             </div>
@@ -67,8 +86,10 @@ export default function MyBidCard({ tradie }: any) {
                 Transcript
               </h4>
               <p className="text-sm text-gray-500 leading-relaxed">
-                {tradie?.transcript ||
-                  "Lorem ipsum dolor sit amet, consectetur adip elit, gile estday tjepg tempor glatn, tohtign mn dwew lorem ipsum dolor sit amet, consectetur adip elit, gile estday tjepg tempor glatn, tohtign mn dwew ipsum dolor sit amet, consectetur adip elit, gile estday tjepg tempor glatn, tohtign mn dwew."}
+                {
+                  // discription
+                  "Lorem ipsum dolor sit amet, consectetur adip elit, gile estday tjepg tempor glatn, tohtign mn dwew lorem ipsum dolor sit amet, consectetur adip elit, gile estday tjepg tempor glatn, tohtign mn dwew ipsum dolor sit amet, consectetur adip elit, gile estday tjepg tempor glatn, tohtign mn dwew."
+                }
               </p>
             </div>
           </div>
@@ -81,8 +102,7 @@ export default function MyBidCard({ tradie }: any) {
               loading="lazy"
               allowFullScreen
               src={`https://www.google.com/maps?q=${encodeURIComponent(
-                tradie?.address ||
-                  "94 Mills Street, Victoria, 3866 Inverloch city Australia"
+                "94 Mills Street, Victoria, 3866 Inverloch city Australia"
               )}&output=embed`}
               className="w-full h-full rounded-md"
               style={{
@@ -100,9 +120,9 @@ export default function MyBidCard({ tradie }: any) {
           <div className="text-sm font-semibold text-gray-700">
             Quoted Price:{" "}
             <span className="text-[#27548a] font-bold">
-              ${tradie?.quotedPrice || 300}
+              ${bid.offeredPrice || 300}
             </span>{" "}
-            | Expected Completion: {tradie?.expectedDate || "Aug 5, 2025"}
+            | Expected Completion: {bid.offeredEstimatedTime || "Aug 5, 2025"}
           </div>
           <div className="flex gap-3">
             <button className="bg-[#27548a] hover:bg-[#1d2834] text-white text-sm font-medium px-5 py-2 rounded-md transition">

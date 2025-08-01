@@ -49,8 +49,6 @@ export default function PostTaskPage() {
     }
 
     const res = await submitTask(formData);
-    console.log("res -- ", res);
-
     if (res.status == 201) {
       router.push("/my-tasks");
     }

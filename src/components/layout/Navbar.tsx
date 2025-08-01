@@ -12,16 +12,18 @@ const Navbar = () => {
   const pathname = usePathname();
   const { authUser } = useAuthStore();
   const [userName, setUserName] = useState("");
-  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedRole, setSelectedRole] = useState();
 
   useEffect(() => {
+      console.log(selectedRole   , authUser?.role);
     if (authUser?.name) {
-      setUserName(authUser.name);
+      setUserName(authUser.name );
     }
     if (authUser?.role) {
       setSelectedRole(authUser.role); // default to actual role
     }
   }, [authUser]);
+
 
   const isLoggedIn = !!authUser;
 
@@ -38,7 +40,7 @@ const Navbar = () => {
   ];
 
   const displayedLinks =
-    selectedRole === TASKER ? navLinksTasker : navLinksPoster;
+    selectedRole === POSTER ? navLinksPoster : navLinksTasker;
 
   return (
     <nav className="flex justify-between items-center px-6 md:px-16 py-4 bg-white shadow-sm border-b border-gray-200">

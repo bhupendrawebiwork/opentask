@@ -10,12 +10,7 @@ export default function TypeTaskPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!taskText.trim()) return;
-
-    // console.log("Submitted task:", taskText);
-
-    
     router.push("/my-tasks/create-task");
   };
 

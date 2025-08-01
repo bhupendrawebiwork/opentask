@@ -27,7 +27,7 @@ export default function BidStatusCard({ task }: any) {
         <div className="flex justify-between items-start">
           <div className="flex gap-3">
             <Image
-              src={task?.user?.image || "/assets/profile.png"}
+              src={task?.user?.profile.avater || "/assets/profile.png"}
               alt="profile"
               width={52}
               height={52}

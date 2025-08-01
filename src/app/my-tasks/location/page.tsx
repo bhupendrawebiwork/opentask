@@ -42,7 +42,6 @@ export default function PostTaskPage() {
     });
     router.push("estimated-budget");
   };
-  // console.log("updated Task Data:", taskData);
 
   return (
     <div className="min-h-screen bg-[#f3f3e0]">

@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { axiosInstance } from "@/lib/axios";
 import { toast } from "react-toastify";
 import { io } from "socket.io-client";
-import { base } from "@/config/constent";
 
 const BASE_URL = `http://localhost:3001`;
 
@@ -16,13 +15,15 @@ export const useAuthStore = create((set, get) => ({
   socket: null,
 
   checkAuth: async () => {
+    const { socket, connectSocket } = get();
     const user = localStorage.getItem("user");
     const userData = user ? JSON.parse(localStorage.getItem("user")) : null;
     if (userData) {
       set({ authUser: userData });
       set({ isCheckingAuth: false });
-      get().connectSocket();
+      connectSocket(userData.id);
     } else {
+      // get().disconnectSocket();
       set({ authUser: null });
       set({ isCheckingAuth: false });
     }
@@ -36,7 +37,7 @@ export const useAuthStore = create((set, get) => ({
       localStorage.setItem("user", JSON.stringify(res.data.user));
       set({ authUser: res.data.user });
       toast.success("Account created successfully");
-      get().connectSocket();
+      get().connectSocket(res.data.user.id);
       return res;
     } catch (error) {
       toast.error(error.response.data.message);
@@ -54,11 +55,10 @@ export const useAuthStore = create((set, get) => ({
       localStorage.setItem("user", JSON.stringify(res.data.user));
       set({ authUser: res.data.user });
       toast.success("Logged in successfully");
-      get().connectSocket();
+      get().connectSocket(res.data.user.id);
       return res;
     } catch (error) {
       console.log("error -- ", error);
-
       toast.error(
         error.response.data.message || error?.message || "something went wrong"
       );
@@ -87,6 +87,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.put("/auth/update-profile", data);
       set({ authUser: res.data.user });
+      localStorage.setItem("user", JSON.stringify(res.data.user));
       toast.success("Profile updated successfully");
     } catch (error) {
       console.log("error in update profile:", error);
@@ -96,13 +97,14 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  connectSocket: () => {
-    const { authUser } = get();
-    if (!authUser || get().socket?.connected) return;
+  connectSocket: (userId) => {
+    if (!userId || get().socket?.connected) return;
+
+    console.log("socket -- ", get().socket);
 
     const socket = io(BASE_URL, {
       query: {
-        userId: authUser.id,
+        userId: userId,
       },
       auth: {
         ngrokSkipBrowserWarning: "true",
@@ -111,7 +113,7 @@ export const useAuthStore = create((set, get) => ({
     });
 
     socket.connect();
-    socket.emit("joinChat", authUser.id);
+    socket.emit("joinChat", userId);
     set({ socket: socket });
 
     socket.on("activeUsers", (userIds) => {

@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MyBidCard from "@/components/common/MyBidCard";
+import { useBidStore } from "@/store/useBidStore";
+import { useSearchParams } from "next/navigation";
 
 const dummyBids = [
   {
@@ -39,6 +41,18 @@ const dummyBids = [
 
 export default function BidStatusPage() {
   const [statusFilter, setStatusFilter] = useState("All");
+  const searchParams = useSearchParams();
+  const taskId = searchParams.get("taskId");
+  const title = searchParams.get("title");
+
+  const { fetchBidsForTask, bids } = useBidStore();
+
+  useEffect(() => {
+    if (taskId) {
+      fetchBidsForTask(taskId);
+    }
+  }, [taskId]);
+
 
   const filteredBids =
     statusFilter === "All"
@@ -156,9 +170,11 @@ export default function BidStatusPage() {
 
       {/* Main Content */}
       <main className="flex-1 p-6 overflow-y-auto h-screen">
-        <h1 className="text-2xl font-bold mb-6 text-[#27548a]">Bids Status</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">
+          {title ? `Bids on ${title}` : "All Bids"}
+        </h1>
         <div className="space-y-4 pb-20">
-          {filteredBids.map((bid) => (
+          {bids.map((bid) => (
             <MyBidCard key={bid.id} bid={bid} />
           ))}
         </div>
