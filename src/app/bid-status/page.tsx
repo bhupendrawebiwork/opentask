@@ -60,74 +60,108 @@ export default function BidStatusPage() {
       : dummyBids.filter((bid) => bid.status === statusFilter);
 
   return (
-    <div className="flex bg-[#F4F8FF] h-screen overflow-hidden">
+    <div className="flex bg-[#f3f3e0] h-screen overflow-hidden">
       {/* Sidebar Filter */}
-      <aside className="w-[300px] p-6 sticky top-0 h-screen overflow-y-auto bg-white shadow-md">
-        <h3 className="text-lg font-semibold mb-4">Filter</h3>
+      <aside className="w-[260px] p-5 bg-[#fffdf2]   sticky top-0 overflow-y-auto rounded-2xl h-[800px] shadow-sm m-6">
+        <h3 className="text-lg font-semibold mb-5 text-[#27548a]">Filter</h3>
 
+        {/* Search Task */}
         <input
           type="text"
           placeholder="Search Task..."
-          className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-4"
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-5 focus:ring-2 focus:ring-blue-400 outline-none"
         />
 
-        <select className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-6">
+        {/* Category */}
+        <select className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-6 focus:ring-2 focus:ring-blue-400 outline-none text-gray-600">
           <option>Select Category</option>
+          <option>Web Development</option>
+          <option>Design</option>
+          <option>Marketing</option>
         </select>
 
-        <div className="mb-4">
-          <h4 className="font-semibold mb-2">Levels</h4>
+        {/* Levels */}
+        <div className="mb-6">
+          <h4 className="font-semibold mb-3 text-[#27548a]">Levels</h4>
           {[
             "Entry Level",
             "Intermediate & Professionals",
             "Expert & High Level Exp.",
-          ].map((label) => (
+          ].map((label, idx) => (
             <label
-              key={label}
-              className="flex items-center space-x-2 text-sm mb-2"
+              key={idx}
+              className="flex items-center space-x-2 text-sm mb-3 cursor-pointer"
             >
-              <input type="checkbox" />
-              <span>{label}</span>
-            </label>
-          ))}
-        </div>
-
-        <div className="mb-4">
-          <h4 className="font-semibold mb-2">Job Type</h4>
-          {["Hourly base", "Monthly base", "Contract base"].map((label, i) => (
-            <label
-              key={label}
-              className="flex items-center space-x-2 text-sm mb-2"
-            >
-              <input type="checkbox" defaultChecked={i === 0} />
-              <span>{label}</span>
-            </label>
-          ))}
-
-          <div className="flex gap-2 mt-2">
-            <input
-              type="number"
-              placeholder="$ min"
-              className="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm"
-            />
-            <input
-              type="number"
-              placeholder="$ max"
-              className="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm"
-            />
-          </div>
-        </div>
-
-        <div>
-          <h4 className="font-semibold mb-2">Fixed Price</h4>
-          {["Less Than $100", "$100 To $500", "$500 To $1k", "$1k To $5k"].map(
-            (range) => (
-              <label
-                key={range}
-                className="flex items-center space-x-2 text-sm mb-2"
+              <input
+                type="checkbox"
+                defaultChecked={label === "Entry Level"}
+                className="accent-[#27548a] w-4 h-4"
+              />
+              <span
+                className={
+                  label === "Entry Level"
+                    ? "text-[#27548a] font-medium"
+                    : "text-gray-700"
+                }
               >
-                <input type="checkbox" />
-                <span>{range}</span>
+                {label}
+              </span>
+            </label>
+          ))}
+        </div>
+
+        {/* Job Type */}
+        <div className="mb-6">
+          <h4 className="font-semibold mb-3 text-[#27548a]">Job Type</h4>
+          {["Hourly base", "Monthly base", "Contract base"].map(
+            (label, idx) => (
+              <label
+                key={idx}
+                className="flex items-center space-x-2 text-sm mb-3 cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  name="jobType"
+                  defaultChecked={label === "Monthly base"}
+                  className="accent-[#27548a] w-4 h-4"
+                />
+                <span
+                  className={
+                    label === "Monthly base"
+                      ? "text-[#27548a] font-medium"
+                      : "text-gray-700"
+                  }
+                >
+                  {label}
+                </span>
+              </label>
+            )
+          )}
+        </div>
+
+        {/* Fixed Price */}
+        <div>
+          <h4 className="font-semibold mb-3 text-[#27548a]">Fixed Price</h4>
+          {["Less Than $100", "$100 To $500", "$500 To $1k", "$1k To $5k"].map(
+            (label, idx) => (
+              <label
+                key={idx}
+                className="flex items-center space-x-2 text-sm mb-3 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  defaultChecked={label === "$500 To $1k"}
+                  className="accent-[#27548a] w-4 h-4"
+                />
+                <span
+                  className={
+                    label === "$500 To $1k"
+                      ? "text-[#27548a] font-medium"
+                      : "text-gray-700"
+                  }
+                >
+                  {label}
+                </span>
               </label>
             )
           )}

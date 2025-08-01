@@ -50,6 +50,7 @@ export default function PostTaskPage() {
         <Sidebar />
         <main className="flex-1 p-10 bg-[#F7F5F8] max-h-[85vh] overflow-y-auto">
           <h1 className="text-xl font-bold mb-2 text-black ml-10">Post Task</h1>
+          
 
           <div className="bg-white rounded-xl p-10 m-10 ">
             <h1 className="text-xl font-semibold mb-6 text-black">Location</h1>

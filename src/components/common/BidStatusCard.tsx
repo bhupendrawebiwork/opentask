@@ -27,7 +27,7 @@ export default function BidStatusCard({ task }: any) {
         <div className="flex justify-between items-start">
           <div className="flex gap-3">
             <Image
-              src={task?.user?.image || "/assets/profile.png"}
+              src={task?.user?.profile.avater || "/assets/profile.png"}
               alt="profile"
               width={52}
               height={52}
@@ -43,18 +43,18 @@ export default function BidStatusCard({ task }: any) {
                   height={20}
                 />
               </div>
-              <div className="text-xs text-blue-400 flex items-center gap-1 mt-0.5">
+              <div className="text-xs text-[#27548a] flex items-center gap-1 mt-0.5">
                 <MapPin size={13} />
                 {task?.address?.full ||
                   "95 Mills Street, Victoria, 3996 Inverloch city Australia"}
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-sm text-blue-400 font-medium">
+          <div className="flex items-center gap-2 text-sm text-[#27548a] font-medium">
             <span className="text-xs sm:text-sm">Posted 3 Days Ago</span>
             <Heart
               size={18}
-              className="text-white p-1 fill-white bg-blue-400 rounded-full"
+              className="text-white p-1 fill-white bg-[#27548a] rounded-full"
             />
           </div>
         </div>
@@ -91,18 +91,18 @@ export default function BidStatusCard({ task }: any) {
         {/* Prices */}
         <div className="mt-3 text-sm text-gray-600 font-semibold">
           Your Quoted Price:{" "}
-          <span className="text-green-600 font-semibold">
+          <span className="text-[#27548a] font-semibold">
             ${task?.quotedPrice || 300}
           </span>{" "}
           | Client Quoted Price:{" "}
-          <span className="text-green-600 font-semibold">
+          <span className="text-[#27548a] font-semibold">
             ${task?.clientPrice || 270}
           </span>
         </div>
 
         {/* Edit Button */}
         <div className="mt-4">
-          <button className="bg-blue-400 text-white text-sm font-semibold px-10 py-2 rounded-md hover:bg-blue-600 transition">
+          <button className="bg-[#27548a] text-white text-sm font-semibold px-10 py-2 rounded-md hover:bg-blue-600 transition">
             Edit
           </button>
         </div>

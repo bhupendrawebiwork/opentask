@@ -30,7 +30,7 @@ export default function PostTaskPage() {
       {/* <Navbar /> */}
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 p-10" style={{ backgroundColor: "#F7F5F8" }}>
+        <main className="flex-1 p-10" style={{ backgroundColor: "#f3f3e0" }}>
           <h1 className="text-xl font-bold mb-2 text-black ml-10">Post Task</h1>
           <div className="bg-white rounded-xl p-10 m-10">
             <h1 className="text-xl font-semibold mb-6 text-black">
