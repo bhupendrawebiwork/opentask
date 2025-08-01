@@ -87,7 +87,7 @@ const Navbar = () => {
             <li>
               <Link href="/auth/profile" className="flex items-center gap-2 ">
                 <Image
-                  src="/assets/social-icons/profile.png"
+                  src="/assets/profile-icon.png"
                   alt="Profile"
                   width={36}
                   height={36}

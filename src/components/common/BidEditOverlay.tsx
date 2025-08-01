@@ -12,6 +12,7 @@ export default function BidEditOverlay({ task, onClose, onSave }: any) {
       <div className="w-full max-w-md bg-white h-full p-6 overflow-y-auto shadow-lg rounded-l-2xl">
         {/* Header: Top section mimicking the image */}
         <div className="mb-6">
+          
           <div className="flex items-center justify-between mb-1">
             <h2 className="text-lg font-semibold text-gray-800">
               Google Sheet automation AI
